@@ -169,57 +169,63 @@ public class ScoreController {
         List<String> allTeachingClassNames = studentMapper.findAllTeachingClassNames();
         model.addAttribute("allTeachingClassNames", allTeachingClassNames);
 
-        // 3. 构建查询条件
-        QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
-
-        // 教学班级筛选 (复选框，默认全不选则显示所有学生)
-        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) { // <-- 已经改用 getTeachingClassNames()
-            queryWrapper.in("teaching_class_name", params.getTeachingClassNames()); // <-- 已经改用 getTeachingClassNames()
+        // --- 用于显示表格数据的查询条件 ---
+        QueryWrapper<Student> displayStudentsQueryWrapper = new QueryWrapper<>();
+        // 教学班级筛选 (对于显示数据)
+        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) {
+            displayStudentsQueryWrapper.in("teaching_class_name", params.getTeachingClassNames());
         }
-
-        // 是否查询筛选
+        // 是否查询筛选 (对于显示数据)
         if (params.getIsChecked() != null) {
-            queryWrapper.eq("is_checked", params.getIsChecked());
+            displayStudentsQueryWrapper.eq("is_checked", params.getIsChecked());
         }
-
-        // 是否有留言筛选
+        // 是否有留言筛选 (对于显示数据)
         if (params.getHasFeedback() != null) {
-            if (params.getHasFeedback()) { // 有留言 (feedback IS NOT NULL AND feedback != '')
-                queryWrapper.isNotNull("feedback").ne("feedback", "");
-            } else { // 无留言 (feedback IS NULL OR feedback = '')
-                queryWrapper.and(wrapper -> wrapper.isNull("feedback").or().eq("feedback", ""));
+            if (params.getHasFeedback()) {
+                displayStudentsQueryWrapper.isNotNull("feedback").ne("feedback", "");
+            } else {
+                displayStudentsQueryWrapper.and(wrapper -> wrapper.isNull("feedback").or().eq("feedback", ""));
             }
         }
-
-        // 4. 查询学生数据 (筛选结果)
-        List<Student> students = studentMapper.selectList(queryWrapper);
+        // 查询并添加到Model，供表格显示
+        List<Student> students = studentMapper.selectList(displayStudentsQueryWrapper);
         model.addAttribute("students", students);
         model.addAttribute("filteredStudentCount", students.size()); // 筛选结果总人数
 
-        // 5. 计算统计数据 (查询率和留言率)
-        long totalStudentsInSelectedClasses = 0; // 选定教学班级总人数
-        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) { // <-- 已经改用 getTeachingClassNames()
-            // 如果指定了教学班级，就统计这些教学班级的总人数
-            totalStudentsInSelectedClasses = studentMapper.selectCount(
-                    new QueryWrapper<Student>().in("teaching_class_name", params.getTeachingClassNames()) // <-- 已经改用 getTeachingClassNames()
-            );
-        } else {
-            // 否则统计所有学生总人数
-            totalStudentsInSelectedClasses = studentMapper.selectCount(null);
+
+        // --- 用于计算查询率和留言率基数的查询条件 ---
+        QueryWrapper<Student> baseCountQueryWrapper = new QueryWrapper<>();
+        // 基数只根据教学班级筛选结果，不考虑其他筛选条件
+        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) {
+            baseCountQueryWrapper.in("teaching_class_name", params.getTeachingClassNames());
         }
+        long totalStudentsInSelectedClasses = studentMapper.selectCount(baseCountQueryWrapper);
 
-        // 从筛选结果中统计已查询和有留言的人数
-        long checkedStudents = students.stream().filter(s -> s.getChecked() != null && s.getChecked()).count();
-        long feedbackStudents = students.stream().filter(s -> s.getFeedback() != null && !s.getFeedback().trim().isEmpty()).count();
+        // --- 用于计算查询率分子的查询条件 ---
+        QueryWrapper<Student> checkedCountQueryWrapper = new QueryWrapper<>();
+        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) {
+            checkedCountQueryWrapper.in("teaching_class_name", params.getTeachingClassNames());
+        }
+        checkedCountQueryWrapper.eq("is_checked", true); // 仅统计已查询的
+        long checkedStudents = studentMapper.selectCount(checkedCountQueryWrapper);
 
+        // --- 用于计算留言率分子的查询条件 ---
+        QueryWrapper<Student> feedbackCountQueryWrapper = new QueryWrapper<>();
+        if (params.getTeachingClassNames() != null && !params.getTeachingClassNames().isEmpty()) {
+            feedbackCountQueryWrapper.in("teaching_class_name", params.getTeachingClassNames());
+        }
+        feedbackCountQueryWrapper.isNotNull("feedback").ne("feedback", ""); // 仅统计有留言的
+        long feedbackStudents = studentMapper.selectCount(feedbackCountQueryWrapper);
+
+
+        // 计算并格式化比率
         double queryRate = (totalStudentsInSelectedClasses == 0) ? 0 : (double) checkedStudents / totalStudentsInSelectedClasses;
         double feedbackRate = (totalStudentsInSelectedClasses == 0) ? 0 : (double) feedbackStudents / totalStudentsInSelectedClasses;
 
-        // 格式化百分比
         model.addAttribute("queryRate", String.format("%.2f%%", queryRate * 100));
         model.addAttribute("feedbackRate", String.format("%.2f%%", feedbackRate * 100));
-        model.addAttribute("queryRateValue", queryRate * 100); // 进度条需要数值
-        model.addAttribute("feedbackRateValue", feedbackRate * 100); // 进度条需要数值
+        model.addAttribute("queryRateValue", queryRate * 100);
+        model.addAttribute("feedbackRateValue", feedbackRate * 100);
 
 
         // 6. 将当前筛选参数传回页面，用于回显

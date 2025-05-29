@@ -52,6 +52,32 @@
         gap: 10px; /* 按钮之间的间距 */
       }
 
+      /* 教学班级卡片样式 */
+      .class-card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px; /* 卡片间距 */
+      }
+      .class-card {
+        padding: 5px 12px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        background-color: #e0f7fa; /* 默认浅蓝色 */
+        color: #007bff;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        font-size: 0.9em;
+      }
+      .class-card:hover {
+        background-color: #cce7ff;
+        border-color: #0056b3;
+      }
+      .class-card.selected {
+        background-color: #007bff; /* 选中后的深蓝色 */
+        color: white;
+        border-color: #0056b3;
+      }
+
       .table-responsive {
         overflow-x: hidden; /* 隐藏横向滚动条 */
       }
@@ -65,20 +91,24 @@
       .table th, .table td {
         white-space: normal; /* 强制文本换行 */
         word-wrap: break-word; /* 单词内部换行 */
-        min-width: 50px; /* 设置最小宽度，避免过窄 */
+        min-width: 30px; /* 设置最小宽度 */
       }
-      /* 针对特定列的宽度优化 */
-      .table th:nth-child(1), .table td:nth-child(1) { width: 4%; }  /* ID */
-      .table th:nth-child(2), .table td:nth-child(2) { width: 8%; }  /* 班级 */
-      .table th:nth-child(3), .table td:nth-child(3) { width: 9%; } /* 教学班级 */
-      .table th:nth-child(4), .table td:nth-child(4) { width: 7%; text-align: center;}  /* 姓名 */
-      .table th:nth-child(5), .table td:nth-child(5) { width: 7%; text-align: center;}  /* 期末 */
-      .table th:nth-child(6), .table td:nth-child(6) { width: 7%; text-align: center;}  /* 平时 */
-      .table th:nth-child(7), .table td:nth-child(7) { width: 7%; text-align: center;}  /* 总评 */
+      /* 针对特定列的宽度优化和居中 */
+      .table th:nth-child(1), .table td:nth-child(1) { width: 6%; text-align: center; }  /* 手机号 */
+      .table th:nth-child(2), .table td:nth-child(2) { width: 8%; text-align: center; } /* 教学班级 */
+      .table th:nth-child(3), .table td:nth-child(3) { width: 8%; text-align: center; }  /* 班级 */
+      .table th:nth-child(4), .table td:nth-child(4) { width: 5%; text-align: center;}  /* 姓名 */
+      .table th:nth-child(5), .table td:nth-child(5) { width: 5%; text-align: center;}  /* 期末 */
+      .table th:nth-child(6), .table td:nth-child(6) { width: 5%; text-align: center;}  /* 平时 */
+      .table th:nth-child(7), .table td:nth-child(7) { width: 5%; text-align: center;}  /* 总评 */
       .table th:nth-child(8), .table td:nth-child(8) { width: 20%; } /* 评语 */
-      .table th:nth-child(9), .table td:nth-child(9) { width: 6%; text-align: center;}  /* 是否查询 */
-      .table th:nth-child(10), .table td:nth-child(10) { width: 8%; } /* 预留手机号 */
-      .table th:nth-child(11), .table td:nth-child(11) { width: 15%; } /* 留言 */
+      .table th:nth-child(9), .table td:nth-child(9) { width: 20%; } /* 留言 */
+      .table th:nth-child(10), .table td:nth-child(10) { width: 5%; text-align: center;}  /* 是否查询 */
+
+      /* 确保所有表头居中 */
+      .table th {
+        text-align: center;
+      }
 
       /* 确保表格总宽度不超过父容器 */
       .table {
@@ -90,9 +120,14 @@
       .progress {
         height: 20px; /* 进度条高度 */
         margin-bottom: 10px;
+        background-color: #e9ecef; /* 进度条背景色 */
       }
       .progress-bar {
-        background-color: #28a745; /* 进度条颜色，可以自定义 */
+        background-color: #28a745; /* 进度条颜色 */
+        color: #ffffff; /* 文字颜色 */
+        text-align: center;
+        font-size: 0.8em;
+        line-height: 20px; /* 文字垂直居中 */
       }
 
       .text-green { color: #28a745; font-weight: bold; } /* 绿色 */
@@ -109,17 +144,22 @@
           筛选条件
         </div>
         <div class="card-body filter-section">
-          <form th:action="@{/admin}" method="get">
+          <form id="filterForm" th:action="@{/admin}" method="get">
             <input type="hidden" name="password" th:value="${params.password}">
+            <!-- 隐藏的 input 字段，用于传递选中的教学班级 -->
+            <input type="hidden" id="selectedTeachingClassNames" name="teachingClassNames" th:value="${params.teachingClassNames != null ? #strings.arrayJoin(params.teachingClassNames, ',') : ''}">
+
 
             <div class="filter-row">
               <div class="filter-item">
                 <label>教学班级：</label>
-                <div th:each="tcName : ${allTeachingClassNames}" class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" name="teachingClassNames" th:id="${'tc_' + tcName}"
-                         th:value="${tcName}"
-                         th:checked="${params.teachingClassNames != null and params.teachingClassNames.contains(tcName)}">
-                  <label class="form-check-label" th:for="${'tc_' + tcName}" th:text="${tcName}"></label>
+                <div class="class-card-container">
+                            <span th:each="tcName : ${allTeachingClassNames}"
+                                  th:data-class-name="${tcName}"
+                                  th:classappend="${params.teachingClassNames != null and params.teachingClassNames.contains(tcName) ? 'selected' : ''}"
+                                  class="class-card">
+                                <span th:text="${tcName}"></span>
+                            </span>
                 </div>
               </div>
             </div>
@@ -168,7 +208,7 @@
 
             <div class="filter-buttons">
               <button type="submit" class="btn btn-primary btn-sm">筛选</button>
-              <!-- 修改后的重置按钮，通过 data-password 传递密码，JS 读取 -->
+              <!-- 重置按钮，通过 data-password 传递密码，JS 读取 -->
               <button type="button" class="btn btn-secondary btn-sm"
                       th:attr="data-password=${params.password}" onclick="resetFilters(this)">重置</button>
             </div>
@@ -183,11 +223,15 @@
         <div class="card-body">
           <p>查询率：<strong th:text="${queryRate}">0.00%</strong></p>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${queryRateValue} + '%'" th:aria-valuenow="${queryRateValue}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${queryRateValue} + '%'" th:aria-valuenow="${queryRateValue}" aria-valuemin="0" aria-valuemax="100">
+              <span th:text="${queryRate}"></span>
+            </div>
           </div>
           <p>留言率：<strong th:text="${feedbackRate}">0.00%</strong></p>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${feedbackRateValue} + '%'" th:aria-valuenow="${feedbackRateValue}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${feedbackRateValue} + '%'" th:aria-valuenow="${feedbackRateValue}" aria-valuemin="0" aria-valuemax="100">
+              <span th:text="${feedbackRate}"></span>
+            </div>
           </div>
           <p>筛选结果总人数：<strong th:text="${filteredStudentCount}">0</strong></p>
         </div>
@@ -202,38 +246,36 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>班级</th>
-                  <th>教学班级</th>
-                  <th>姓名</th>
-                  <th>期末成绩</th>
-                  <th>平时成绩</th>
-                  <th>总评</th>
+                  <th>手机号</th>       <!-- 调整顺序 -->
+                  <th>教学班级</th>     <!-- 调整顺序 -->
+                  <th>班级</th>         <!-- 调整顺序 -->
+                  <th>姓名</th>         <!-- 调整顺序 -->
+                  <th>期末成绩</th>     <!-- 调整顺序 -->
+                  <th>平时成绩</th>     <!-- 调整顺序 -->
+                  <th>总评</th>         <!-- 调整顺序 -->
                   <th>评语</th>
-                  <th>是否查询</th>
-                  <th>预留手机号</th>
-                  <th>留言</th>
+                  <th>留言</th>         <!-- 调整顺序 -->
+                  <th>是否查询</th>     <!-- 调整顺序 -->
                 </tr>
               </thead>
               <tbody>
                 <tr th:each="student : ${students}">
-                  <td th:text="${student.id}">1</td>
-                  <td th:text="${student.className}">一年级一班</td>
-                  <td th:text="${student.teachingClassName}">编程提高班A</td>
-                  <td th:text="${student.name}">小明</td>
-                  <td th:text="${student.finalScore}">A</td>
-                  <td th:text="${student.usualScore}">B</td>
-                  <td th:text="${student.totalScore}">A</td>
+                  <td th:text="${student.phone}">13888888888</td> <!-- 调整顺序，手机号居中 -->
+                  <td th:text="${student.teachingClassName}">编程提高班A</td> <!-- 调整顺序 -->
+                  <td th:text="${student.className}">一年级一班</td>    <!-- 调整顺序 -->
+                  <td th:text="${student.name}">小明</td>              <!-- 调整顺序 -->
+                  <td th:text="${student.finalScore}">A</td>         <!-- 调整顺序 -->
+                  <td th:text="${student.usualScore}">B</td>         <!-- 调整顺序 -->
+                  <td th:text="${student.totalScore}">A</td>         <!-- 调整顺序 -->
                   <td th:text="${student.comment}">好好表现</td>
+                  <td th:text="${student.feedback}">老师很棒！</td>   <!-- 调整顺序 -->
                   <td>
                             <span th:classappend="${student.checked ? 'text-green' : 'text-red'}"
                                   th:text="${student.checked ? '是' : '否'}">是</span>
-                  </td>
-                  <td th:text="${student.phone}">13888888888</td>
-                  <td th:text="${student.feedback}">老师很棒！</td>
+                  </td>                                             <!-- 调整顺序 -->
                 </tr>
                 <tr th:if="${#lists.isEmpty(students)}">
-                  <td colspan="11" class="text-center">没有找到符合条件的学生数据。</td>
+                  <td colspan="10" class="text-center">没有找到符合条件的学生数据。</td>
                 </tr>
               </tbody>
             </table>
@@ -248,18 +290,44 @@
     <script src="/scoreQuery/popper.js"></script>
     <script src="/scoreQuery/bootstrap.js"></script>
     <script>
-      // 新增的 resetFilters 函数
+      // 用于重置筛选条件的函数
       function resetFilters(button) {
         var password = button.getAttribute('data-password');
-        // 使用相对路径确保在所有部署环境下正常工作
-        // location.href = '/scoreQuery/admin?password=' + password;
-        // 更好的做法是动态获取上下文路径，但根据现有配置，scoreQuery/admin 应该就是正确路径
         var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/admin"));
-        if (contextPath === "") { // 如果admin就是根路径
-          contextPath = "/scoreQuery";
+        if (contextPath === "") {
+          contextPath = "/scoreQuery"; // 默认上下文路径
         }
         location.href = contextPath + '/admin?password=' + password;
       }
+
+      // 处理教学班级卡片点击事件
+      $(document).ready(function() {
+        var $hiddenInput = $('#selectedTeachingClassNames');
+        var selectedClassNames = $hiddenInput.val() ? $hiddenInput.val().split(',') : [];
+
+        $('.class-card').on('click', function() {
+          var $this = $(this);
+          var className = $this.data('class-name');
+
+          if ($this.hasClass('selected')) {
+            // 如果已选中，则取消选中
+            $this.removeClass('selected');
+            selectedClassNames = selectedClassNames.filter(name => name !== className);
+          } else {
+            // 如果未选中，则选中
+            $this.addClass('selected');
+            selectedClassNames.push(className);
+          }
+          // 更新隐藏input的值
+          $hiddenInput.val(selectedClassNames.join(','));
+        });
+
+        // 初始化时，如果 hiddenInput 有值，确保卡片样式是正确的，Thymeleaf 已经处理了
+        // 但是为了以防万一或未来手动JS操作，可以保留这部分逻辑
+        // selectedClassNames.forEach(function(className) {
+        //     $('[data-class-name="' + className + '"]').addClass('selected');
+        // });
+      });
     </script>
   </body>
 </html>

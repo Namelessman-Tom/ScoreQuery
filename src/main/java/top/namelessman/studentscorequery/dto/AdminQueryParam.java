@@ -1,11 +1,10 @@
-// src/main/java/top/namelessman/studentscorequery/dto/AdminQueryParam.java
 package top.namelessman.studentscorequery.dto;
 
 import java.util.List;
 
 public class AdminQueryParam {
     private String password;
-    private List<String> classNames;
+    private List<String> teachingClassNames;
     private Boolean isChecked;
     private Boolean hasFeedback;
 
@@ -18,12 +17,12 @@ public class AdminQueryParam {
         this.password = password;
     }
 
-    public List<String> getClassNames() {
-        return classNames;
+    public List<String> getTeachingClassNames() {
+        return teachingClassNames;
     }
 
-    public void setClassNames(List<String> classNames) {
-        this.classNames = classNames;
+    public void setTeachingClassNames(List<String> teachingClassNames) {
+        this.teachingClassNames = teachingClassNames;
     }
 
     public Boolean getIsChecked() {
@@ -45,10 +44,10 @@ public class AdminQueryParam {
     @Override
     public String toString() {
         return "AdminQueryParam{" +
-               "password='" + password + '\'' +
-               ", classNames=" + classNames +
-               ", isChecked=" + isChecked +
-               ", hasFeedback=" + hasFeedback +
-               '}';
+                "password='" + password + '\'' +
+                ", teachingClassNames=" + teachingClassNames + // <-- toString() 也改了
+                ", isChecked=" + isChecked +
+                ", hasFeedback=" + hasFeedback +
+                '}';
     }
 }

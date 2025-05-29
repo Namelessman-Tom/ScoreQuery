@@ -11,7 +11,7 @@
         padding-bottom: 20px;
         background-color: #f8f9fa;
       }
-      .container-fluid { /* 使用 container-fluid 让内容更宽 */
+      .container-fluid {
         padding-left: 30px;
         padding-right: 30px;
       }
@@ -30,7 +30,29 @@
       .filter-section {
         padding: 20px;
       }
-      .table-responsive { /* 包裹表格，使其在小屏幕上可滚动，但我们希望它不滚动 */
+      /* 筛选条件行布局 */
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap; /* 允许项目换行 */
+        margin-bottom: 10px; /* 每行之间有间距 */
+        align-items: center; /* 垂直居中对齐 */
+      }
+      .filter-item {
+        margin-right: 20px; /* 每个筛选项之间有间距 */
+        margin-bottom: 10px; /* 小屏幕下也保持间距 */
+        display: flex;
+        align-items: center;
+      }
+      .filter-item label {
+        margin-right: 5px;
+      }
+      .filter-buttons {
+        margin-top: 10px; /* 按钮和筛选条件之间有间距 */
+        display: flex;
+        gap: 10px; /* 按钮之间的间距 */
+      }
+
+      .table-responsive {
         overflow-x: hidden; /* 隐藏横向滚动条 */
       }
       .table-sm th, .table-sm td {
@@ -46,22 +68,36 @@
         min-width: 50px; /* 设置最小宽度，避免过窄 */
       }
       /* 针对特定列的宽度优化 */
-      .table th:nth-child(1), .table td:nth-child(1) { width: 5%; } /* ID */
-      .table th:nth-child(2), .table td:nth-child(2) { width: 10%; } /* 班级 */
-      .table th:nth-child(3), .table td:nth-child(3) { width: 8%; }  /* 姓名 */
-      .table th:nth-child(4), .table td:nth-child(4) { width: 8%; }  /* 期末 */
-      .table th:nth-child(5), .table td:nth-child(5) { width: 8%; }  /* 平时 */
-      .table th:nth-child(6), .table td:nth-child(6) { width: 8%; }  /* 总评 */
-      .table th:nth-child(7), .table td:nth-child(7) { width: 25%; } /* 评语 */
-      .table th:nth-child(8), .table td:nth-child(8) { width: 8%; }  /* 是否查询 */
-      .table th:nth-child(9), .table td:nth-child(9) { width: 10%; } /* 预留手机号 */
-      .table th:nth-child(10), .table td:nth-child(10) { width: 10%; } /* 留言 */
+      .table th:nth-child(1), .table td:nth-child(1) { width: 4%; }  /* ID */
+      .table th:nth-child(2), .table td:nth-child(2) { width: 8%; }  /* 班级 */
+      .table th:nth-child(3), .table td:nth-child(3) { width: 9%; } /* 教学班级 */
+      .table th:nth-child(4), .table td:nth-child(4) { width: 7%; text-align: center;}  /* 姓名 */
+      .table th:nth-child(5), .table td:nth-child(5) { width: 7%; text-align: center;}  /* 期末 */
+      .table th:nth-child(6), .table td:nth-child(6) { width: 7%; text-align: center;}  /* 平时 */
+      .table th:nth-child(7), .table td:nth-child(7) { width: 7%; text-align: center;}  /* 总评 */
+      .table th:nth-child(8), .table td:nth-child(8) { width: 20%; } /* 评语 */
+      .table th:nth-child(9), .table td:nth-child(9) { width: 6%; text-align: center;}  /* 是否查询 */
+      .table th:nth-child(10), .table td:nth-child(10) { width: 8%; } /* 预留手机号 */
+      .table th:nth-child(11), .table td:nth-child(11) { width: 15%; } /* 留言 */
 
       /* 确保表格总宽度不超过父容器 */
       .table {
         width: 100%;
         table-layout: fixed; /* 固定表格布局，确保列宽按百分比分配 */
       }
+
+      /* 进度条样式 */
+      .progress {
+        height: 20px; /* 进度条高度 */
+        margin-bottom: 10px;
+      }
+      .progress-bar {
+        background-color: #28a745; /* 进度条颜色，可以自定义 */
+      }
+
+      .text-green { color: #28a745; font-weight: bold; } /* 绿色 */
+      .text-red { color: #dc3545; font-weight: bold; }    /* 红色 */
+
     </style>
   </head>
   <body>
@@ -73,60 +109,69 @@
           筛选条件
         </div>
         <div class="card-body filter-section">
-          <form th:action="@{/admin}" method="get" class="form-inline">
+          <form th:action="@{/admin}" method="get">
             <input type="hidden" name="password" th:value="${params.password}">
 
-            <div class="form-group mr-3 mb-2">
-              <label for="classNames" class="mr-2">班级：</label>
-              <select id="classNames" name="classNames" multiple class="form-control form-control-sm">
-                <option th:each="className : ${allClassNames}"
-                        th:value="${className}"
-                        th:text="${className}"
-                        th:selected="${params.classNames != null and params.classNames.contains(className)}">
-                  班级名称
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group mr-3 mb-2">
-              <label class="mr-2">是否查询：</label>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="isChecked" id="checkedTrue" value="true"
-                       th:checked="${params.isChecked != null and params.isChecked == true}">
-                <label class="form-check-label" for="checkedTrue">是</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="isChecked" id="checkedFalse" value="false"
-                       th:checked="${params.isChecked != null and params.isChecked == false}">
-                <label class="form-check-label" for="checkedFalse">否</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="isChecked" id="checkedAll" value=""
-                       th:checked="${params.isChecked == null}">
-                <label class="form-check-label" for="checkedAll">全部</label>
+            <div class="filter-row">
+              <div class="filter-item">
+                <label>教学班级：</label>
+                <div th:each="tcName : ${allTeachingClassNames}" class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="teachingClassNames" th:id="${'tc_' + tcName}"
+                         th:value="${tcName}"
+                         th:checked="${params.teachingClassNames != null and params.teachingClassNames.contains(tcName)}">
+                  <label class="form-check-label" th:for="${'tc_' + tcName}" th:text="${tcName}"></label>
+                </div>
               </div>
             </div>
 
-            <div class="form-group mr-3 mb-2">
-              <label class="mr-2">是否有留言：</label>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackTrue" value="true"
-                       th:checked="${params.hasFeedback != null and params.hasFeedback == true}">
-                <label class="form-check-label" for="feedbackTrue">是</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackFalse" value="false"
-                       th:checked="${params.hasFeedback != null and params.hasFeedback == false}">
-                <label class="form-check-label" for="feedbackFalse">否</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackAll" value=""
-                       th:checked="${params.hasFeedback == null}">
-                <label class="form-check-label" for="feedbackAll">全部</label>
+            <div class="filter-row">
+              <div class="filter-item">
+                <label>是否查询：</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="isChecked" id="checkedTrue" value="true"
+                         th:checked="${params.isChecked != null and params.isChecked == true}">
+                  <label class="form-check-label" for="checkedTrue">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="isChecked" id="checkedFalse" value="false"
+                         th:checked="${params.isChecked != null and params.isChecked == false}">
+                  <label class="form-check-label" for="checkedFalse">否</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="isChecked" id="checkedAll" value=""
+                         th:checked="${params.isChecked == null}">
+                  <label class="form-check-label" for="checkedAll">全部</label>
+                </div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-sm mb-2">筛选</button>
+            <div class="filter-row">
+              <div class="filter-item">
+                <label>是否有留言：</label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackTrue" value="true"
+                         th:checked="${params.hasFeedback != null and params.hasFeedback == true}">
+                  <label class="form-check-label" for="feedbackTrue">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackFalse" value="false"
+                         th:checked="${params.hasFeedback != null and params.hasFeedback == false}">
+                  <label class="form-check-label" for="feedbackFalse">否</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackAll" value=""
+                         th:checked="${params.hasFeedback == null}">
+                  <label class="form-check-label" for="feedbackAll">全部</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-buttons">
+              <button type="submit" class="btn btn-primary btn-sm">筛选</button>
+              <!-- 修改后的重置按钮，通过 data-password 传递密码，JS 读取 -->
+              <button type="button" class="btn btn-secondary btn-sm"
+                      th:attr="data-password=${params.password}" onclick="resetFilters(this)">重置</button>
+            </div>
           </form>
         </div>
       </div>
@@ -137,7 +182,14 @@
         </div>
         <div class="card-body">
           <p>查询率：<strong th:text="${queryRate}">0.00%</strong></p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${queryRateValue} + '%'" th:aria-valuenow="${queryRateValue}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
           <p>留言率：<strong th:text="${feedbackRate}">0.00%</strong></p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${feedbackRateValue} + '%'" th:aria-valuenow="${feedbackRateValue}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p>筛选结果总人数：<strong th:text="${filteredStudentCount}">0</strong></p>
         </div>
       </div>
 
@@ -152,6 +204,7 @@
                 <tr>
                   <th>ID</th>
                   <th>班级</th>
+                  <th>教学班级</th>
                   <th>姓名</th>
                   <th>期末成绩</th>
                   <th>平时成绩</th>
@@ -166,17 +219,21 @@
                 <tr th:each="student : ${students}">
                   <td th:text="${student.id}">1</td>
                   <td th:text="${student.className}">一年级一班</td>
+                  <td th:text="${student.teachingClassName}">编程提高班A</td>
                   <td th:text="${student.name}">小明</td>
                   <td th:text="${student.finalScore}">A</td>
                   <td th:text="${student.usualScore}">B</td>
                   <td th:text="${student.totalScore}">A</td>
                   <td th:text="${student.comment}">好好表现</td>
-                  <td th:text="${student.checked ? '是' : '否'}">是</td>
+                  <td>
+                            <span th:classappend="${student.checked ? 'text-green' : 'text-red'}"
+                                  th:text="${student.checked ? '是' : '否'}">是</span>
+                  </td>
                   <td th:text="${student.phone}">13888888888</td>
                   <td th:text="${student.feedback}">老师很棒！</td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(students)}">
-                  <td colspan="10" class="text-center">没有找到符合条件的学生数据。</td>
+                  <td colspan="11" class="text-center">没有找到符合条件的学生数据。</td>
                 </tr>
               </tbody>
             </table>
@@ -189,18 +246,20 @@
 
     <script src="/scoreQuery/jquery.js"></script>
     <script src="/scoreQuery/popper.js"></script>
-    <script src="/scoreQuery/bootstrap.js"></script> <!-- 注意这里是bootstrap.js -->
+    <script src="/scoreQuery/bootstrap.js"></script>
     <script>
-      // 在页面加载完成后执行
-      $(document).ready(function() {
-        // 让多选框支持 Ctrl/Cmd + 点击取消选中
-        $('#classNames').on('mousedown', 'option', function(e) {
-          e.preventDefault();
-          $(this).prop('selected', !$(this).prop('selected'));
-          // 触发change事件，确保表单提交时选中状态正确
-          $(this).parent().trigger('change');
-        });
-      });
+      // 新增的 resetFilters 函数
+      function resetFilters(button) {
+        var password = button.getAttribute('data-password');
+        // 使用相对路径确保在所有部署环境下正常工作
+        // location.href = '/scoreQuery/admin?password=' + password;
+        // 更好的做法是动态获取上下文路径，但根据现有配置，scoreQuery/admin 应该就是正确路径
+        var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/admin"));
+        if (contextPath === "") { // 如果admin就是根路径
+          contextPath = "/scoreQuery";
+        }
+        location.href = contextPath + '/admin?password=' + password;
+      }
     </script>
   </body>
 </html>

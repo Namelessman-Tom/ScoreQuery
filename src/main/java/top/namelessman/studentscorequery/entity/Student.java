@@ -1,15 +1,17 @@
-// src/main/java/com/example/score/entity/Student.java
+// src/main/java/top/namelessman/studentscorequery/entity/Student.java
 package top.namelessman.studentscorequery.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.TableField; // 导入 TableField 注解
 
 @TableName("student")
 public class Student {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String className;
+    private String teachingClassName;
     private String name;
     private String finalScore;
     private String usualScore;
@@ -43,6 +45,15 @@ public class Student {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    // 新增教学班级 getter 和 setter
+    public String getTeachingClassName() {
+        return teachingClassName;
+    }
+
+    public void setTeachingClassName(String teachingClassName) {
+        this.teachingClassName = teachingClassName;
     }
 
     public String getFinalScore() {

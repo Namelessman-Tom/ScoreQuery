@@ -87,7 +87,11 @@
         <div class="container">
             <h2 class="text-center mb-4">成绩</h2>
             <div class="class-section">
-                <p >班级：<span th:text="${student.className}"></span>    姓名：<span th:text="${student.name}"></span></p>
+                <p >
+                    班级：<span th:text="${student.className}"></span>
+                        教学班级：<span th:text="${student.teachingClassName}"></span> <!-- 新增教学班级显示 -->
+                        姓名：<span th:text="${student.name}"></span>
+                </p>
 
             </div>
             <div th:if="${suc}" class="alert alert-success" role="alert">
@@ -104,12 +108,12 @@
                         th:text="${student.totalScore}"></h1>
                     <p style="margin-bottom: 0" >
                         期末作品成绩: <span th:if="${student.getFinalScore()}"
-                            th:class="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
-                            th:text="${student.finalScore}"></span>
+                                            th:class="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
+                                            th:text="${student.finalScore}"></span>
                             
                         平时表现成绩: <span th:if="${student.getUsualScore()}"
-                            th:class="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
-                            th:text="${student.usualScore}"></span>
+                                            th:class="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
+                                            th:text="${student.usualScore}"></span>
                     </p>
                     <span style="text-align: right;margin: 0 auto;font-size: small" >2025年春季</span>
 
@@ -176,6 +180,6 @@
         </script>
         <script src="/scoreQuery/jquery.js"></script>
         <script src="/scoreQuery/popper.js"></script>
-        <script src="/scoreQuery/bootstrap.css"></script>
+        <script src="/scoreQuery/bootstrap.js"></script>
     </body>
 </html>

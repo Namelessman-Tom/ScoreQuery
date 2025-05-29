@@ -6,25 +6,23 @@
     <title>后台管理</title>
     <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入Font Awesome图标库，用于更多可爱图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
       body {
         padding-top: 20px;
         padding-bottom: 20px;
         background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%); /* 渐变背景 */
-        min-height: 100vh; /* 确保背景覆盖整个视口 */
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* 内容从顶部开始 */
-        align-items: center; /* 水平居中内容 */
-        font-family: 'Noto Sans SC', sans-serif; /* 引入思源黑体 */
+        justify-content: flex-start;
+        align-items: center;
+        font-family: 'Noto Sans SC', sans-serif;
         color: #333;
       }
 
-      .container-fluid { /* 后台页面内容更宽 */
+      .container-fluid {
         width: 100%;
-        /*max-width: 1200px; !* 控制最大宽度 *!*/
         padding: 15px;
       }
 
@@ -37,48 +35,45 @@
 
       .card {
         margin-bottom: 20px;
-        border-radius: 15px; /* 圆角 */
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
-        background-color: #ffffff; /* 白色背景 */
-        border: none; /* 移除默认边框 */
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        border: none;
       }
 
-      /* 统一卡片头部样式 - 无独立背景，字体颜色统一 */
       .card-header {
-        background: none; /* 移除背景色 */
-        color: #007bff; /* 文字颜色改为主题蓝 */
-        border-radius: 15px 15px 0 0; /* 保持顶部圆角 */
-        font-weight: 700; /* 加粗 */
-        padding: 1rem 1.5rem 0.5rem; /* 调整内边距，底部留少点空间 */
+        background: none;
+        color: #007bff;
+        border-radius: 15px 15px 0 0;
+        font-weight: 700;
+        padding: 1rem 1.5rem 0.5rem;
         font-size: 1.15rem;
         display: flex;
         align-items: center;
-        border-bottom: none; /* 移除底部边框，与 body 融合 */
+        border-bottom: none;
       }
-      .card-header i { /* 卡片头部图标样式统一放左边 */
+      .card-header i {
         margin-right: 10px;
         font-size: 1.2em;
-        color: #007bff; /* 图标颜色也改为主题蓝 */
+        color: #007bff;
       }
-      /* 调整 card-body 的顶部内边距，与 header 更好的衔接 */
       .card-body {
-        padding: 1rem 1.5rem 1.5rem; /* 上下内边距 */
+        padding: 1rem 1.5rem 1.5rem;
       }
 
 
       .filter-section {
         padding: 20px;
       }
-      /* 筛选条件行布局 */
       .filter-row {
         display: flex;
-        flex-wrap: wrap; /* 允许项目换行 */
-        margin-bottom: 10px; /* 每行之间有间距 */
-        align-items: center; /* 垂直居中对齐 */
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+        align-items: center;
       }
       .filter-item {
-        margin-right: 20px; /* 每个筛选项之间有间距 */
-        margin-bottom: 10px; /* 小屏幕下也保持间距 */
+        margin-right: 20px;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
       }
@@ -88,22 +83,21 @@
         color: #555;
       }
       .filter-buttons {
-        margin-top: 10px; /* 按钮和筛选条件之间有间距 */
+        margin-top: 10px;
         display: flex;
-        gap: 10px; /* 按钮之间的间距 */
+        gap: 10px;
       }
 
-      /* 教学班级卡片样式 */
       .class-card-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px; /* 卡片间距 */
+        gap: 8px;
       }
       .class-card {
         padding: 5px 12px;
         border: 1px solid #007bff;
         border-radius: 5px;
-        background-color: #e0f7fa; /* 默认浅蓝色 */
+        background-color: #e0f7fa;
         color: #007bff;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
@@ -114,17 +108,16 @@
         border-color: #0056b3;
       }
       .class-card.selected {
-        background-color: #007bff; /* 选中后的深蓝色 */
+        background-color: #007bff;
         color: white;
         border-color: #0056b3;
       }
 
-      /* 统一按钮样式 */
       .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
-        border-radius: 8px; /* 按钮圆角 */
-        height: 40px; /* 增加按钮高度 */
+        border-radius: 8px;
+        height: 40px;
         font-size: 1rem;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -132,14 +125,14 @@
       .btn-primary:hover {
         background-color: #0056b3;
         border-color: #0056b3;
-        transform: translateY(-2px); /* 悬停效果 */
+        transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
       }
       .btn-secondary {
         background-color: #6c757d;
         border-color: #6c757d;
-        border-radius: 8px; /* 按钮圆角 */
-        height: 40px; /* 增加按钮高度 */
+        border-radius: 8px;
+        height: 40px;
         font-size: 1rem;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -147,17 +140,16 @@
       .btn-secondary:hover {
         background-color: #5a6268;
         border-color: #545b62;
-        transform: translateY(-2px); /* 悬停效果 */
+        transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
       }
 
-      /* 单选按钮组样式 */
       .radio-button-group {
-        display: flex; /* 让单选按钮水平排列 */
-        gap: 10px; /* 按钮间距 */
+        display: flex;
+        gap: 10px;
       }
       .radio-button-group label.form-check-label {
-        padding: 8px 15px; /* 增加点击区域 */
+        padding: 8px 15px;
         border: 1px solid #ced4da;
         border-radius: 8px;
         cursor: pointer;
@@ -165,7 +157,7 @@
         background-color: #f8f9fa;
       }
       .radio-button-group input[type="radio"] {
-        display: none; /* 隐藏原始单选框 */
+        display: none;
       }
       .radio-button-group input[type="radio"]:checked + label {
         background-color: #007bff;
@@ -178,135 +170,254 @@
       }
 
 
-      .table-responsive {
-        overflow-x: hidden; /* 隐藏横向滚动条 */
-      }
-      .table-sm th, .table-sm td {
-        padding: 0.5rem; /* 增加单元格内边距，适应新列宽 */
-        vertical-align: middle; /* 垂直居中 */
-      }
-      .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.03); /* 条纹表格，颜色更淡 */
-      }
-      .table th, .table td {
-        white-space: normal; /* 强制文本换行 */
-        word-wrap: break-word; /* 单词内部换行 */
-      }
-      /* 针对特定列的宽度优化和居中 */
-      .table th:nth-child(1), .table td:nth-child(1) { width: 6%; text-align: center; }  /* 手机号 */
-      .table th:nth-child(2), .table td:nth-child(2) { width: 8%; text-align: center; } /* 教学班级 */
-      .table th:nth-child(3), .table td:nth-child(3) { width: 8%; text-align: center; }  /* 班级 */
-      .table th:nth-child(4), .table td:nth-child(4) { width: 5%; text-align: center;}  /* 姓名 */
-      .table th:nth-child(5), .table td:nth-child(5) { width: 5%; text-align: center;}  /* 期末 */
-      .table th:nth-child(6), .table td:nth-child(6) { width: 5%; text-align: center;}  /* 平时 */
-      .table th:nth-child(7), .table td:nth-child(7) { width: 5%; text-align: center;}  /* 总评 */
-      .table th:nth-child(8), .table td:nth-child(8) { width: 20%; } /* 评语 */
-      .table th:nth-child(9), .table td:nth-child(9) { width: 20%; } /* 留言 */
-      .table th:nth-child(10), .table td:nth-child(10) { width: 5%; text-align: center;}  /* 是否查询 */
-
-      /* 确保所有表头居中 */
-      .table th {
-        text-align: center;
-        background-color: #f2f7fb; /* 表头背景色 */
-        color: #007bff; /* 表头文字颜色 */
-        border-bottom: 2px solid #dee2e6; /* 底部加粗边框 */
-      }
-
-      /* 确保表格总宽度不超过父容器 */
-      .table {
+      /* Desktop Table View */
+      .table-desktop {
+        display: block; /* 默认显示 */
         width: 100%;
-        table-layout: fixed; /* 固定表格布局，确保列宽按百分比分配 */
-        border-collapse: separate; /* 允许圆角边框 */
-        border-spacing: 0; /* 移除单元格间距 */
+        border-radius: 10px; /* 统一表格圆角 */
+        overflow: hidden; /* 隐藏超出圆角的部分 */
+      }
+      .table-desktop .table-sm th, .table-desktop .table-sm td {
+        padding: 0.5rem;
+        vertical-align: middle;
+      }
+      .table-desktop .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+      .table-desktop .table th, .table-desktop .table td {
+        white-space: normal;
+        word-wrap: break-word;
+      }
+      .table-desktop .table th:nth-child(1), .table-desktop .table td:nth-child(1) { width: 6%; text-align: center; }  /* 手机号 */
+      .table-desktop .table th:nth-child(2), .table-desktop .table td:nth-child(2) { width: 8%; text-align: center; } /* 教学班级 */
+      .table-desktop .table th:nth-child(3), .table-desktop .table td:nth-child(3) { width: 8%; text-align: center; }  /* 班级 */
+      .table-desktop .table th:nth-child(4), .table-desktop .table td:nth-child(4) { width: 5%; text-align: center;}  /* 姓名 */
+      .table-desktop .table th:nth-child(5), .table-desktop .table td:nth-child(5) { width: 5%; text-align: center;}  /* 期末 */
+      .table-desktop .table th:nth-child(6), .table-desktop .table td:nth-child(6) { width: 5%; text-align: center;}  /* 平时 */
+      .table-desktop .table th:nth-child(7), .table-desktop .table td:nth-child(7) { width: 5%; text-align: center;}  /* 总评 */
+      .table-desktop .table th:nth-child(8), .table-desktop .table td:nth-child(8) { width: 20%; } /* 评语 */
+      .table-desktop .table th:nth-child(9), .table-desktop .table td:nth-child(9) { width: 20%; } /* 留言 */
+      .table-desktop .table th:nth-child(10), .table-desktop .table td:nth-child(10) { width: 5%; text-align: center;}  /* 是否查询 */
+
+      .table-desktop .table th {
+        text-align: center;
+        background-color: #f2f7fb;
+        color: #007bff;
+        border-bottom: 2px solid #dee2e6;
+      }
+      .table-desktop .table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid #dee2e6; /* 整体边框 */
       }
       /* 表格圆角 */
-      .table thead th:first-child { border-top-left-radius: 10px; }
-      .table thead th:last-child { border-top-right-radius: 10px; }
-      .table tbody tr:last-child td:first-child { border-bottom-left-radius: 10px; }
-      .table tbody tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+      .table-desktop .table thead th:first-child { border-top-left-radius: 10px; }
+      .table-desktop .table thead th:last-child { border-top-right-radius: 10px; }
+      .table-desktop .table tbody tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+      .table-desktop .table tbody tr:last-child td:last-child { border-bottom-right-radius: 10px; }
+
+
+      /* Mobile Card List View */
+      .card-list-mobile {
+        display: none; /* 默认隐藏 */
+        margin-top: 20px;
+      }
+      .student-card-item {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative; /* 用于展开/收起箭头 */
+        overflow: hidden; /* 防止内容溢出圆角 */
+      }
+      .student-card-item:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+      .student-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start; /* 调整对齐方式，防止长文本被挤 */
+        margin-bottom: 10px;
+        padding-right: 30px; /* 增加右边距，为箭头留出空间 */
+      }
+      .student-card-header .name-class {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #007bff;
+        flex-grow: 1; /* 允许姓名和班级占据更多空间 */
+        min-width: 0; /* 允许内容在必要时换行 */
+        white-space: normal; /* 允许换行 */
+      }
+      .student-card-header .name-class small { /* 班级字体可以再小一点点 */
+        font-size: 0.9em;
+        display: block; /* 强制班级换行显示在姓名下方 */
+        margin-top: 2px;
+      }
+      .student-card-header .score-status {
+        display: flex;
+        flex-shrink: 0; /* 防止该部分收缩 */
+        align-items: center;
+        gap: 8px; /* 间距稍微缩小 */
+        padding-left: 10px; /* 与左侧文字间距 */
+        margin-left: auto; /* 推到最右边 */
+      }
+      .student-card-header .total-score {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #28a745; /* 绿色 */
+        min-width: 40px;
+        text-align: right;
+        white-space: nowrap; /* 总评不换行 */
+      }
+      .student-card-header .checked-status {
+        font-size: 0.85em; /* 字体小一点 */
+        padding: 3px 6px; /* 缩小内边距 */
+        border-radius: 5px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .student-card-header .checked-status.is-checked {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .student-card-header .checked-status.not-checked {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .student-card-details {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+        padding-top: 0;
+      }
+      .student-card-details.show {
+        max-height: 500px;
+        padding-top: 15px;
+      }
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.95rem;
+        color: #555;
+      }
+      .detail-label {
+        font-weight: 500;
+        color: #444;
+        flex-shrink: 0; /* 标签不收缩 */
+        margin-right: 10px;
+      }
+      .detail-value {
+        text-align: right;
+        flex-grow: 1;
+        white-space: pre-line;
+        word-wrap: break-word;
+      }
+      .detail-full-width {
+        margin-top: 10px;
+      }
+      .detail-full-width .detail-value {
+        margin-top: 5px;
+        text-align: left;
+        padding: 8px 10px;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        border: 1px solid #e0f7fa;
+      }
+
+      .expand-arrow {
+        position: absolute;
+        top: 18px; /* 调整箭头位置 */
+        right: 15px; /* 调整箭头位置 */
+        font-size: 1.1em; /* 箭头小一点点 */
+        color: #007bff;
+        transition: transform 0.3s ease;
+      }
+      .student-card-item.expanded .expand-arrow {
+        transform: rotate(90deg);
+      }
+
 
       /* 进度条样式 */
       .progress {
-        height: 25px; /* 进度条高度 */
+        height: 25px;
         margin-bottom: 15px;
-        background-color: #e9ecef; /* 进度条背景色 */
-        border-radius: 8px; /* 圆角 */
+        background-color: #e9ecef;
+        border-radius: 8px;
       }
       .progress-bar {
-        background-color: #28a745; /* 进度条颜色 */
-        color: #ffffff; /* 文字颜色 */
+        background-color: #28a745;
+        color: #ffffff;
         text-align: center;
         font-size: 0.9em;
-        line-height: 25px; /* 文字垂直居中 */
-        border-radius: 8px; /* 圆角 */
-        transition: width 0.6s ease; /* 动画效果 */
+        line-height: 25px;
+        border-radius: 8px;
+        transition: width 0.6s ease;
       }
 
-      .text-green { color: #28a745; font-weight: bold; } /* 绿色 */
-      .text-red { color: #dc3545; font-weight: bold; }    /* 红色 */
+      .text-green { color: #28a745; font-weight: bold; }
+      .text-red { color: #dc3545; font-weight: bold; }
 
-      /* 页脚 */
       footer {
         margin-top: 30px;
         color: #6c757d;
         font-size: 0.9rem;
       }
 
-      /* 手机适配 */
+      /* 媒体查询：手机端适配 */
       @media (max-width: 768px) {
-        body {
+        .container-fluid {
           padding: 10px;
         }
-        .container-fluid {
-          padding: 0;
+        .table-desktop {
+          display: none; /* 在手机端隐藏表格 */
         }
-        h2 {
-          font-size: 1.8rem;
-          margin-bottom: 20px;
+        .card-list-mobile {
+          display: block; /* 在手机端显示卡片列表 */
         }
-        .card {
+        .filter-row {
+          flex-direction: column;
+          align-items: flex-start;
           margin-bottom: 15px;
-          border-radius: 10px;
-        }
-        .card-header {
-          padding: 0.8rem 1.2rem 0.4rem;
-          font-size: 1.05rem;
-          border-radius: 10px 10px 0 0;
-        }
-        .card-body {
-          padding: 0.8rem 1.2rem 1.2rem;
         }
         .filter-item {
-          margin-right: 10px;
-          margin-bottom: 5px;
+          margin-right: 0;
+          margin-bottom: 10px;
+          width: 100%;
+        }
+        .class-card-container {
+          width: 100%;
+          justify-content: flex-start;
         }
         .class-card {
-          padding: 4px 10px;
-          font-size: 0.8em;
+          padding: 6px 12px;
+          font-size: 0.9em;
+        }
+        .radio-button-group {
+          flex-wrap: wrap;
+          gap: 8px;
         }
         .radio-button-group label.form-check-label {
-          padding: 6px 12px;
-          font-size: 0.9rem;
+          padding: 10px 15px;
+          font-size: 1rem;
         }
         .btn-primary, .btn-secondary {
-          height: 38px;
-          font-size: 0.9rem;
+          height: 45px;
+          font-size: 1.05rem;
+          width: 100%;
         }
-        /* 表格列宽调整适应手机 */
-        .table-sm th, .table-sm td {
-          padding: 0.4rem;
+        .filter-buttons {
+          flex-direction: column;
+          gap: 10px;
+          width: 100%;
         }
-        .table th:nth-child(1), .table td:nth-child(1) { width: 8%; }  /* 手机号 */
-        .table th:nth-child(2), .table td:nth-child(2) { width: 10%; } /* 教学班级 */
-        .table th:nth-child(3), .table td:nth-child(3) { width: 8%; }  /* 班级 */
-        .table th:nth-child(4), .table td:nth-child(4) { width: 7%; }  /* 姓名 */
-        .table th:nth-child(5), .table td:nth-child(5) { width: 7%; }  /* 期末 */
-        .table th:nth-child(6), .table td:nth-child(6) { width: 7%; }  /* 平时 */
-        .table th:nth-child(7), .table td:nth-child(7) { width: 7%; }  /* 总评 */
-        .table th:nth-child(8), .table td:nth-child(8) { width: 16%; } /* 评语 */
-        .table th:nth-child(9), .table td:nth-child(9) { width: 16%; } /* 留言 */
-        .table th:nth-child(10), .table td:nth-child(10) { width: 6%; } /* 是否查询 */
-
       }
     </style>
   </head>
@@ -321,7 +432,6 @@
         <div class="card-body filter-section">
           <form id="filterForm" th:action="@{/admin}" method="get">
             <input type="hidden" name="password" th:value="${params.password}">
-            <!-- 隐藏的 input 字段，用于传递选中的教学班级 -->
             <input type="hidden" id="selectedTeachingClassNames" name="teachingClassNames" th:value="${params.teachingClassNames != null ? #strings.arrayJoin(params.teachingClassNames, ',') : ''}">
 
 
@@ -343,15 +453,15 @@
               <div class="filter-item">
                 <label><i class="fas fa-eye"></i> 是否查询：</label>
                 <div class="radio-button-group">
-                  <input class="form-check-input" type="radio" name="isChecked" id="checkedTrue" value="true"
+                  <input type="radio" name="isChecked" id="checkedTrue" value="true"
                          th:checked="${params.isChecked != null and params.isChecked == true}">
                   <label class="form-check-label" for="checkedTrue">是</label>
 
-                  <input class="form-check-input" type="radio" name="isChecked" id="checkedFalse" value="false"
+                  <input type="radio" name="isChecked" id="checkedFalse" value="false"
                          th:checked="${params.isChecked != null and params.isChecked == false}">
                   <label class="form-check-label" for="checkedFalse">否</label>
 
-                  <input class="form-check-input" type="radio" name="isChecked" id="checkedAll" value=""
+                  <input type="radio" name="isChecked" id="checkedAll" value=""
                          th:checked="${params.isChecked == null}">
                   <label class="form-check-label" for="checkedAll">全部</label>
                 </div>
@@ -362,15 +472,15 @@
               <div class="filter-item">
                 <label><i class="fas fa-comment-alt"></i> 是否有留言：</label>
                 <div class="radio-button-group">
-                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackTrue" value="true"
+                  <input type="radio" name="hasFeedback" id="feedbackTrue" value="true"
                          th:checked="${params.hasFeedback != null and params.hasFeedback == true}">
                   <label class="form-check-label" for="feedbackTrue">是</label>
 
-                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackFalse" value="false"
+                  <input type="radio" name="hasFeedback" id="feedbackFalse" value="false"
                          th:checked="${params.hasFeedback != null and params.hasFeedback == false}">
                   <label class="form-check-label" for="feedbackFalse">否</label>
 
-                  <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackAll" value=""
+                  <input type="radio" name="hasFeedback" id="feedbackAll" value=""
                          th:checked="${params.hasFeedback == null}">
                   <label class="form-check-label" for="feedbackAll">全部</label>
                 </div>
@@ -379,7 +489,6 @@
 
             <div class="filter-buttons">
               <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> 筛选</button>
-              <!-- 重置按钮，通过 data-password 传递密码，JS 读取 -->
               <button type="button" class="btn btn-secondary btn-sm"
                       th:attr="data-password=${params.password}" onclick="resetFilters(this)">
                 <i class="fas fa-sync-alt"></i> 重置
@@ -410,7 +519,8 @@
         </div>
       </div>
 
-      <div class="card">
+      <!-- Desktop Table View -->
+      <div class="card table-desktop">
         <div class="card-header">
           <i class="fas fa-users"></i> 学生列表
         </div>
@@ -455,6 +565,65 @@
           </div>
         </div>
       </div>
+
+      <!-- Mobile Card List View -->
+      <div class="card card-list-mobile">
+        <div class="card-header">
+          <i class="fas fa-users"></i> 学生列表
+        </div>
+        <div class="card-body">
+          <div th:if="${#lists.isEmpty(students)}" class="text-center text-muted p-4">
+            没有找到符合条件的学生数据。
+          </div>
+          <div th:each="student : ${students}" class="student-card-item" th:data-student-id="${student.id}"
+               onclick="toggleStudentDetails(this)">
+            <span class="expand-arrow"><i class="fas fa-chevron-right"></i></span>
+            <div class="student-card-header">
+              <div class="name-class">
+                <span th:text="${student.name}">小明</span>
+                <!-- 班级显示为 className，并强制换行 -->
+                <small class="text-muted" th:if="${student.className}" th:text="${'(' + student.className + ')'}"></small>
+              </div>
+              <div class="score-status">
+                         <span th:classappend="${'total-score grade-' + (student.totalScore != null ? student.totalScore.trim().substring(0,1).toLowerCase() : 'other')}"
+                               th:text="${student.totalScore ?: 'N/A'}">A</span>
+                <span th:classappend="${student.checked ? 'checked-status is-checked' : 'checked-status not-checked'}"
+                      th:text="${student.checked ? '已查询' : '未查询'}">已查询</span>
+              </div>
+            </div>
+            <div class="student-card-details">
+              <div class="detail-row">
+                <span class="detail-label">手机号：</span>
+                <span class="detail-value" th:text="${student.phone}">13888888888</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">教学班级：</span>
+                <span class="detail-value" th:text="${student.teachingClassName}">编程提高班A</span>
+              </div>
+              <div class="detail-row" th:if="${student.finalScore}">
+                <span class="detail-label">期末成绩：</span>
+                <span class="detail-value" th:classappend="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
+                      th:text="${student.finalScore}"></span>
+              </div>
+              <div class="detail-row" th:if="${student.usualScore}">
+                <span class="detail-label">平时成绩：</span>
+                <span class="detail-value" th:classappend="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
+                      th:text="${student.usualScore}"></span>
+              </div>
+              <div class="detail-full-width" th:if="${student.comment}">
+                <span class="detail-label">评语：</span>
+                <div class="detail-value" th:text="${student.comment}"></div>
+              </div>
+              <div class="detail-full-width" th:if="${student.feedback}">
+                <span class="detail-label">留言：</span>
+                <div class="detail-value" th:text="${student.feedback}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
 
     <footer style="text-align: center">
@@ -485,18 +654,22 @@
           var className = $this.data('class-name');
 
           if ($this.hasClass('selected')) {
-            // 如果已选中，则取消选中
             $this.removeClass('selected');
             selectedClassNames = selectedClassNames.filter(name => name !== className);
           } else {
-            // 如果未选中，则选中
             $this.addClass('selected');
             selectedClassNames.push(className);
           }
-          // 更新隐藏input的值
           $hiddenInput.val(selectedClassNames.join(','));
         });
       });
+
+      // 手机端卡片展开/收起功能
+      function toggleStudentDetails(element) {
+        $(element).toggleClass('expanded');
+        var details = $(element).find('.student-card-details');
+        details.toggleClass('show');
+      }
     </script>
   </body>
 </html>

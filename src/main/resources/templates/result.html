@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>成绩查询结果</title>
+        <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+
+        <style>
+            body {
+                padding-top: 20px;
+                padding-bottom: 20px;
+                background-color: #f8f9fa; /* 浅灰色背景 */
+            }
+
+            .card {
+                margin-bottom: 20px;
+                border-radius: 10px; /* 圆角 */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+            }
+
+            .card-header {
+                background-color: #007bff; /* 蓝色卡片头 */
+                color: white;
+                border-radius: 10px 10px 0 0;
+                font-weight: bold;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .score-display {
+                text-align: center;
+            }
+
+            .score-display h1 {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .score-display h4 {
+                margin-bottom: 0.5rem;
+                color: #007bff;
+            }
+
+            .comment-section p {
+                white-space: pre-line;
+            }
+
+            .download-section {
+                text-align: center;
+            }
+
+            .download-section a {
+                margin-top: 10px;
+            }
+
+            .feedback-section textarea {
+                height: 150px;
+            }
+
+            .class-section {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 1.1rem;
+            }
+
+            .grade-a {
+                color: #1fd526; /* 绿色 */
+            }
+
+            .grade-b {
+                color: #b48909; /* 黄色 */
+            }
+
+            .grade-c {
+                color: #c96909; /* 橙色 */
+            }
+
+            .grade-other {
+                color: #757575; /* 灰色 */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2 class="text-center mb-4">成绩</h2>
+            <div class="class-section">
+                <p >班级：<span th:text="${student.className}"></span>    姓名：<span th:text="${student.name}"></span></p>
+
+            </div>
+            <div th:if="${suc}" class="alert alert-success" role="alert">
+                <span>留言提交成功！</span>
+            </div>
+            <div class="card" th:if="${student.getTotalScore()}">
+                <div class="card-header">
+                    成绩
+
+                </div>
+                <div class="card-body score-display">
+                    <h4>总评</h4>
+                    <h1 th:class="${'grade-' + student.totalScore.trim().substring(0,1).toLowerCase()}"
+                        th:text="${student.totalScore}"></h1>
+                    <p style="margin-bottom: 0" >
+                        期末作品成绩: <span th:if="${student.getFinalScore()}"
+                            th:class="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
+                            th:text="${student.finalScore}"></span>
+                            
+                        平时表现成绩: <span th:if="${student.getUsualScore()}"
+                            th:class="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
+                            th:text="${student.usualScore}"></span>
+                    </p>
+                    <span style="text-align: right;margin: 0 auto;font-size: small" >2025年春季</span>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    评语
+                </div>
+                <div class="card-body comment-section">
+                    <p style="white-space: pre-line;" th:text="${student.comment}"></p>
+                </div>
+            </div>
+
+            <div class="card" th:if="${downloadable}">
+                <div class="card-header">
+                    下载作品
+                </div>
+                <div class="card-body download-section">
+                    <div th:if="${isDesktop}">
+                        <a class="btn btn-primary"
+                           th:href="@{/download(name=${student.name})}">下载作品</a>
+                        <p th:unless="${downloadable}">没有找到您的作品</p>
+                    </div>
+                    <div th:unless="${isDesktop}">
+                        <p>请在电脑端打开网页下载学生作品</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    想对老师说
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/score/feedback}" method="post">
+                        <input type="hidden" name="id" th:value="${student.id}">
+                        <div class="feedback-section">
+                            <div class="form-group">
+                                <label for="feedback">建议/想法（选填）：</label>
+                                <textarea class="form-control" id="feedback" name="feedback" rows="5"
+                                          maxlength="500"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
+        <script>
+            // 检查是否是移动设备
+            function isMobileDevice() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
+            // 如果是移动设备，则隐藏下载链接
+            document.addEventListener('DOMContentLoaded', function () {
+                if (isMobileDevice()) {
+
+                }
+            });
+
+        </script>
+        <script src="/scoreQuery/jquery.js"></script>
+        <script src="/scoreQuery/popper.js"></script>
+        <script src="/scoreQuery/bootstrap.css"></script>
+    </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>成绩查询</title>
+        <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+        <style>
+            body {
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .form-signin {
+                width: 100%;
+                max-width: 400px;
+                padding: 15px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <form class="form-signin" method="post" th:action="@{/score/check}">
+                <h2 class="h3 mb-3 font-weight-normal text-center">成绩查询</h2>
+                <div class="form-group">
+                    <label for="name" class="sr-only">姓名</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="姓名" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="sr-only">预留手机号</label>
+                    <input type="text" id="phone" name="phone" class="form-control" placeholder="预留手机号" required>
+                </div>
+                <div class="form-group">
+                    <label for="captcha" class="sr-only">验证码</label>
+                    <div style="display: flex;">
+                        <input type="text" id="captcha" name="captcha" class="form-control" placeholder="验证码" required style="width: 200px;">
+                        <img id="captchaImage" th:src="${captchaImage}"  style="margin-left: 10px;cursor: pointer;"/>
+                    </div>
+                </div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">查询</button>
+            </form>
+        </div>
+        <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
+
+        <script src="/scoreQuery/jquery.js"></script>
+        <script src="/scoreQuery/popper.js"></script>
+        <script src="/scoreQuery/bootstrap.css"></script>
+        <script>
+            document.getElementById('captchaImage').onclick = function() {
+                fetch('/scoreQuery/captcha')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('captchaImage').src = data;
+                    });
+            };
+        </script>
+    </body>
+</html>

@@ -5,28 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>后台管理</title>
     <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入Font Awesome图标库，用于更多可爱图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
       body {
         padding-top: 20px;
         padding-bottom: 20px;
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%); /* 渐变背景 */
+        min-height: 100vh; /* 确保背景覆盖整个视口 */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* 内容从顶部开始 */
+        align-items: center; /* 水平居中内容 */
+        font-family: 'Noto Sans SC', sans-serif; /* 引入思源黑体 */
+        color: #333;
       }
-      .container-fluid {
-        padding-left: 30px;
-        padding-right: 30px;
+
+      .container-fluid { /* 后台页面内容更宽 */
+        width: 100%;
+        /*max-width: 1200px; !* 控制最大宽度 *!*/
+        padding: 15px;
       }
+
+      h2 {
+        color: #007bff;
+        font-weight: 700;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+      }
+
       .card {
         margin-bottom: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px; /* 圆角 */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+        background-color: #ffffff; /* 白色背景 */
+        border: none; /* 移除默认边框 */
       }
+
+      /* 统一卡片头部样式 - 无独立背景，字体颜色统一 */
       .card-header {
-        background-color: #007bff;
-        color: white;
-        border-radius: 10px 10px 0 0;
-        font-weight: bold;
-        padding: 1rem 1.25rem;
+        background: none; /* 移除背景色 */
+        color: #007bff; /* 文字颜色改为主题蓝 */
+        border-radius: 15px 15px 0 0; /* 保持顶部圆角 */
+        font-weight: 700; /* 加粗 */
+        padding: 1rem 1.5rem 0.5rem; /* 调整内边距，底部留少点空间 */
+        font-size: 1.15rem;
+        display: flex;
+        align-items: center;
+        border-bottom: none; /* 移除底部边框，与 body 融合 */
       }
+      .card-header i { /* 卡片头部图标样式统一放左边 */
+        margin-right: 10px;
+        font-size: 1.2em;
+        color: #007bff; /* 图标颜色也改为主题蓝 */
+      }
+      /* 调整 card-body 的顶部内边距，与 header 更好的衔接 */
+      .card-body {
+        padding: 1rem 1.5rem 1.5rem; /* 上下内边距 */
+      }
+
+
       .filter-section {
         padding: 20px;
       }
@@ -45,6 +84,8 @@
       }
       .filter-item label {
         margin-right: 5px;
+        font-weight: 500;
+        color: #555;
       }
       .filter-buttons {
         margin-top: 10px; /* 按钮和筛选条件之间有间距 */
@@ -78,20 +119,78 @@
         border-color: #0056b3;
       }
 
+      /* 统一按钮样式 */
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 8px; /* 按钮圆角 */
+        height: 40px; /* 增加按钮高度 */
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+        transform: translateY(-2px); /* 悬停效果 */
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        border-radius: 8px; /* 按钮圆角 */
+        height: 40px; /* 增加按钮高度 */
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+        transform: translateY(-2px); /* 悬停效果 */
+        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+      }
+
+      /* 单选按钮组样式 */
+      .radio-button-group {
+        display: flex; /* 让单选按钮水平排列 */
+        gap: 10px; /* 按钮间距 */
+      }
+      .radio-button-group label.form-check-label {
+        padding: 8px 15px; /* 增加点击区域 */
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: #f8f9fa;
+      }
+      .radio-button-group input[type="radio"] {
+        display: none; /* 隐藏原始单选框 */
+      }
+      .radio-button-group input[type="radio"]:checked + label {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+        box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+      }
+      .radio-button-group label.form-check-label:hover {
+        background-color: #e2e6ea;
+      }
+
+
       .table-responsive {
         overflow-x: hidden; /* 隐藏横向滚动条 */
       }
       .table-sm th, .table-sm td {
-        padding: 0.3rem; /* 减小单元格内边距 */
+        padding: 0.5rem; /* 增加单元格内边距，适应新列宽 */
         vertical-align: middle; /* 垂直居中 */
       }
       .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05); /* 条纹表格 */
+        background-color: rgba(0, 0, 0, 0.03); /* 条纹表格，颜色更淡 */
       }
       .table th, .table td {
         white-space: normal; /* 强制文本换行 */
         word-wrap: break-word; /* 单词内部换行 */
-        min-width: 30px; /* 设置最小宽度 */
       }
       /* 针对特定列的宽度优化和居中 */
       .table th:nth-child(1), .table td:nth-child(1) { width: 6%; text-align: center; }  /* 手机号 */
@@ -108,40 +207,116 @@
       /* 确保所有表头居中 */
       .table th {
         text-align: center;
+        background-color: #f2f7fb; /* 表头背景色 */
+        color: #007bff; /* 表头文字颜色 */
+        border-bottom: 2px solid #dee2e6; /* 底部加粗边框 */
       }
 
       /* 确保表格总宽度不超过父容器 */
       .table {
         width: 100%;
         table-layout: fixed; /* 固定表格布局，确保列宽按百分比分配 */
+        border-collapse: separate; /* 允许圆角边框 */
+        border-spacing: 0; /* 移除单元格间距 */
       }
+      /* 表格圆角 */
+      .table thead th:first-child { border-top-left-radius: 10px; }
+      .table thead th:last-child { border-top-right-radius: 10px; }
+      .table tbody tr:last-child td:first-child { border-bottom-left-radius: 10px; }
+      .table tbody tr:last-child td:last-child { border-bottom-right-radius: 10px; }
 
       /* 进度条样式 */
       .progress {
-        height: 20px; /* 进度条高度 */
-        margin-bottom: 10px;
+        height: 25px; /* 进度条高度 */
+        margin-bottom: 15px;
         background-color: #e9ecef; /* 进度条背景色 */
+        border-radius: 8px; /* 圆角 */
       }
       .progress-bar {
         background-color: #28a745; /* 进度条颜色 */
         color: #ffffff; /* 文字颜色 */
         text-align: center;
-        font-size: 0.8em;
-        line-height: 20px; /* 文字垂直居中 */
+        font-size: 0.9em;
+        line-height: 25px; /* 文字垂直居中 */
+        border-radius: 8px; /* 圆角 */
+        transition: width 0.6s ease; /* 动画效果 */
       }
 
       .text-green { color: #28a745; font-weight: bold; } /* 绿色 */
       .text-red { color: #dc3545; font-weight: bold; }    /* 红色 */
 
+      /* 页脚 */
+      footer {
+        margin-top: 30px;
+        color: #6c757d;
+        font-size: 0.9rem;
+      }
+
+      /* 手机适配 */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+        .container-fluid {
+          padding: 0;
+        }
+        h2 {
+          font-size: 1.8rem;
+          margin-bottom: 20px;
+        }
+        .card {
+          margin-bottom: 15px;
+          border-radius: 10px;
+        }
+        .card-header {
+          padding: 0.8rem 1.2rem 0.4rem;
+          font-size: 1.05rem;
+          border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+          padding: 0.8rem 1.2rem 1.2rem;
+        }
+        .filter-item {
+          margin-right: 10px;
+          margin-bottom: 5px;
+        }
+        .class-card {
+          padding: 4px 10px;
+          font-size: 0.8em;
+        }
+        .radio-button-group label.form-check-label {
+          padding: 6px 12px;
+          font-size: 0.9rem;
+        }
+        .btn-primary, .btn-secondary {
+          height: 38px;
+          font-size: 0.9rem;
+        }
+        /* 表格列宽调整适应手机 */
+        .table-sm th, .table-sm td {
+          padding: 0.4rem;
+        }
+        .table th:nth-child(1), .table td:nth-child(1) { width: 8%; }  /* 手机号 */
+        .table th:nth-child(2), .table td:nth-child(2) { width: 10%; } /* 教学班级 */
+        .table th:nth-child(3), .table td:nth-child(3) { width: 8%; }  /* 班级 */
+        .table th:nth-child(4), .table td:nth-child(4) { width: 7%; }  /* 姓名 */
+        .table th:nth-child(5), .table td:nth-child(5) { width: 7%; }  /* 期末 */
+        .table th:nth-child(6), .table td:nth-child(6) { width: 7%; }  /* 平时 */
+        .table th:nth-child(7), .table td:nth-child(7) { width: 7%; }  /* 总评 */
+        .table th:nth-child(8), .table td:nth-child(8) { width: 16%; } /* 评语 */
+        .table th:nth-child(9), .table td:nth-child(9) { width: 16%; } /* 留言 */
+        .table th:nth-child(10), .table td:nth-child(10) { width: 6%; } /* 是否查询 */
+
+      }
     </style>
   </head>
   <body>
     <div class="container-fluid">
-      <h2 class="text-center mb-4">后台管理</h2>
+      <h2 class="text-center">后台管理</h2>
 
       <div class="card">
         <div class="card-header">
-          筛选条件
+          <i class="fas fa-filter"></i> 筛选条件
         </div>
         <div class="card-body filter-section">
           <form id="filterForm" th:action="@{/admin}" method="get">
@@ -152,7 +327,7 @@
 
             <div class="filter-row">
               <div class="filter-item">
-                <label>教学班级：</label>
+                <label><i class="fas fa-chalkboard-teacher"></i> 教学班级：</label>
                 <div class="class-card-container">
                             <span th:each="tcName : ${allTeachingClassNames}"
                                   th:data-class-name="${tcName}"
@@ -166,18 +341,16 @@
 
             <div class="filter-row">
               <div class="filter-item">
-                <label>是否查询：</label>
-                <div class="form-check form-check-inline">
+                <label><i class="fas fa-eye"></i> 是否查询：</label>
+                <div class="radio-button-group">
                   <input class="form-check-input" type="radio" name="isChecked" id="checkedTrue" value="true"
                          th:checked="${params.isChecked != null and params.isChecked == true}">
                   <label class="form-check-label" for="checkedTrue">是</label>
-                </div>
-                <div class="form-check form-check-inline">
+
                   <input class="form-check-input" type="radio" name="isChecked" id="checkedFalse" value="false"
                          th:checked="${params.isChecked != null and params.isChecked == false}">
                   <label class="form-check-label" for="checkedFalse">否</label>
-                </div>
-                <div class="form-check form-check-inline">
+
                   <input class="form-check-input" type="radio" name="isChecked" id="checkedAll" value=""
                          th:checked="${params.isChecked == null}">
                   <label class="form-check-label" for="checkedAll">全部</label>
@@ -187,18 +360,16 @@
 
             <div class="filter-row">
               <div class="filter-item">
-                <label>是否有留言：</label>
-                <div class="form-check form-check-inline">
+                <label><i class="fas fa-comment-alt"></i> 是否有留言：</label>
+                <div class="radio-button-group">
                   <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackTrue" value="true"
                          th:checked="${params.hasFeedback != null and params.hasFeedback == true}">
                   <label class="form-check-label" for="feedbackTrue">是</label>
-                </div>
-                <div class="form-check form-check-inline">
+
                   <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackFalse" value="false"
                          th:checked="${params.hasFeedback != null and params.hasFeedback == false}">
                   <label class="form-check-label" for="feedbackFalse">否</label>
-                </div>
-                <div class="form-check form-check-inline">
+
                   <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackAll" value=""
                          th:checked="${params.hasFeedback == null}">
                   <label class="form-check-label" for="feedbackAll">全部</label>
@@ -207,10 +378,12 @@
             </div>
 
             <div class="filter-buttons">
-              <button type="submit" class="btn btn-primary btn-sm">筛选</button>
+              <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> 筛选</button>
               <!-- 重置按钮，通过 data-password 传递密码，JS 读取 -->
               <button type="button" class="btn btn-secondary btn-sm"
-                      th:attr="data-password=${params.password}" onclick="resetFilters(this)">重置</button>
+                      th:attr="data-password=${params.password}" onclick="resetFilters(this)">
+                <i class="fas fa-sync-alt"></i> 重置
+              </button>
             </div>
           </form>
         </div>
@@ -218,7 +391,7 @@
 
       <div class="card">
         <div class="card-header">
-          统计信息
+          <i class="fas fa-chart-bar"></i> 统计信息
         </div>
         <div class="card-body">
           <p>查询率：<strong th:text="${queryRate}">0.00%</strong></p>
@@ -239,40 +412,40 @@
 
       <div class="card">
         <div class="card-header">
-          学生列表
+          <i class="fas fa-users"></i> 学生列表
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>手机号</th>       <!-- 调整顺序 -->
-                  <th>教学班级</th>     <!-- 调整顺序 -->
-                  <th>班级</th>         <!-- 调整顺序 -->
-                  <th>姓名</th>         <!-- 调整顺序 -->
-                  <th>期末成绩</th>     <!-- 调整顺序 -->
-                  <th>平时成绩</th>     <!-- 调整顺序 -->
-                  <th>总评</th>         <!-- 调整顺序 -->
+                  <th>手机号</th>
+                  <th>教学班级</th>
+                  <th>班级</th>
+                  <th>姓名</th>
+                  <th>期末成绩</th>
+                  <th>平时成绩</th>
+                  <th>总评</th>
                   <th>评语</th>
-                  <th>留言</th>         <!-- 调整顺序 -->
-                  <th>是否查询</th>     <!-- 调整顺序 -->
+                  <th>留言</th>
+                  <th>是否查询</th>
                 </tr>
               </thead>
               <tbody>
                 <tr th:each="student : ${students}">
-                  <td th:text="${student.phone}">13888888888</td> <!-- 调整顺序，手机号居中 -->
-                  <td th:text="${student.teachingClassName}">编程提高班A</td> <!-- 调整顺序 -->
-                  <td th:text="${student.className}">一年级一班</td>    <!-- 调整顺序 -->
-                  <td th:text="${student.name}">小明</td>              <!-- 调整顺序 -->
-                  <td th:text="${student.finalScore}">A</td>         <!-- 调整顺序 -->
-                  <td th:text="${student.usualScore}">B</td>         <!-- 调整顺序 -->
-                  <td th:text="${student.totalScore}">A</td>         <!-- 调整顺序 -->
+                  <td th:text="${student.phone}">13888888888</td>
+                  <td th:text="${student.teachingClassName}">编程提高班A</td>
+                  <td th:text="${student.className}">一年级一班</td>
+                  <td th:text="${student.name}">小明</td>
+                  <td th:text="${student.finalScore}">A</td>
+                  <td th:text="${student.usualScore}">B</td>
+                  <td th:text="${student.totalScore}">A</td>
                   <td th:text="${student.comment}">好好表现</td>
-                  <td th:text="${student.feedback}">老师很棒！</td>   <!-- 调整顺序 -->
+                  <td th:text="${student.feedback}">老师很棒！</td>
                   <td>
                             <span th:classappend="${student.checked ? 'text-green' : 'text-red'}"
                                   th:text="${student.checked ? '是' : '否'}">是</span>
-                  </td>                                             <!-- 调整顺序 -->
+                  </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(students)}">
                   <td colspan="10" class="text-center">没有找到符合条件的学生数据。</td>
@@ -284,7 +457,9 @@
       </div>
     </div>
 
-    <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
+    <footer style="text-align: center">
+      <p>© Namelessman 林煜耿 2024</p>
+    </footer>
 
     <script src="/scoreQuery/jquery.js"></script>
     <script src="/scoreQuery/popper.js"></script>
@@ -321,12 +496,6 @@
           // 更新隐藏input的值
           $hiddenInput.val(selectedClassNames.join(','));
         });
-
-        // 初始化时，如果 hiddenInput 有值，确保卡片样式是正确的，Thymeleaf 已经处理了
-        // 但是为了以防万一或未来手动JS操作，可以保留这部分逻辑
-        // selectedClassNames.forEach(function(className) {
-        //     $('[data-class-name="' + className + '"]').addClass('selected');
-        // });
       });
     </script>
   </body>

@@ -5,16 +5,127 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>成绩查询</title>
         <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
         <style>
             body {
                 padding-top: 20px;
                 padding-bottom: 20px;
+                background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%); /* 渐变背景 */
+                min-height: 100vh; /* 确保背景覆盖整个视口 */
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* 垂直居中内容 */
+                align-items: center; /* 水平居中内容 */
+                font-family: 'Noto Sans SC', sans-serif; /* 引入思源黑体 */
+                color: #333;
             }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                max-width: 400px; /* 控制最大宽度 */
+                padding: 15px;
+            }
+
             .form-signin {
                 width: 100%;
-                max-width: 400px;
-                padding: 15px;
-                margin: auto;
+                background-color: #ffffff; /* 白色背景 */
+                border-radius: 15px; /* 圆角 */
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+                padding: 30px;
+                box-sizing: border-box; /* 包含内边距 */
+            }
+
+            .form-signin .h3 {
+                color: #007bff; /* 主题蓝色 */
+                margin-bottom: 30px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-control {
+                border-radius: 8px; /* 输入框圆角 */
+                height: 48px; /* 增加输入框高度 */
+                padding: 10px 15px;
+                font-size: 1rem;
+                border: 1px solid #ced4da;
+                transition: all 0.3s ease;
+            }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+            #captchaImage {
+                border-radius: 8px;
+                border: 1px solid #ced4da;
+                cursor: pointer;
+                height: 48px; /* 验证码图片高度与输入框一致 */
+                flex-shrink: 0; /* 防止图片在小屏幕下缩小 */
+            }
+            #captcha {
+                flex-grow: 1; /* 验证码输入框占据剩余空间 */
+                margin-right: 10px; /* 与图片间距 */
+            }
+
+            .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+                border-radius: 8px; /* 按钮圆角 */
+                height: 50px; /* 增加按钮高度 */
+                font-size: 1.1rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+                transform: translateY(-2px); /* 悬停效果 */
+                box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            }
+
+            .alert-danger {
+                border-radius: 8px;
+                font-size: 0.95rem;
+                margin-top: -10px; /* 向上微调，更紧凑 */
+                margin-bottom: 20px; /* 调整间距 */
+            }
+
+            footer {
+                margin-top: 30px;
+                color: #6c757d;
+                font-size: 0.9rem;
+            }
+
+            /* 手机适配 */
+            @media (max-width: 576px) {
+                body {
+                    padding: 15px; /* 减小整体内边距 */
+                }
+                .form-signin {
+                    padding: 20px; /* 减小卡片内边距 */
+                }
+                .form-signin .h3 {
+                    font-size: 1.5rem; /* 标题适应屏幕 */
+                }
+                #captchaImage {
+                    height: 40px; /* 手机上验证码图小一点 */
+                }
+                .form-control {
+                    height: 44px; /* 手机上输入框小一点 */
+                }
+                .btn-primary {
+                    height: 48px; /* 手机上按钮小一点 */
+                }
             }
         </style>
     </head>
@@ -32,22 +143,24 @@
                 </div>
                 <div class="form-group">
                     <label for="captcha" class="sr-only">验证码</label>
-                    <div style="display: flex;">
-                        <input type="text" id="captcha" name="captcha" class="form-control" placeholder="验证码" required style="width: 200px;">
-                        <img id="captchaImage" th:src="${captchaImage}"  style="margin-left: 10px;cursor: pointer;"/>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" id="captcha" name="captcha" class="form-control" placeholder="验证码" required>
+                        <img id="captchaImage" th:src="${captchaImage}" alt="验证码" />
                     </div>
                 </div>
-                <div th:if="${error}" class="alert alert-danger" role="alert">
+                <div th:if="${error}" class="alert alert-danger text-center" role="alert">
                     <span th:text="${error}"></span>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">查询</button>
             </form>
         </div>
-        <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
+        <footer style="text-align: center">
+            <p>© Namelessman 林煜耿 2024</p>
+        </footer>
 
         <script src="/scoreQuery/jquery.js"></script>
         <script src="/scoreQuery/popper.js"></script>
-        <script src="/scoreQuery/bootstrap.css"></script>
+        <script src="/scoreQuery/bootstrap.js"></script>
         <script>
             document.getElementById('captchaImage').onclick = function() {
                 fetch('/scoreQuery/captcha')
@@ -56,6 +169,18 @@
                         document.getElementById('captchaImage').src = data;
                     });
             };
+            // 确保页面加载时验证码是可见的
+            document.addEventListener('DOMContentLoaded', function() {
+                var captchaImage = document.getElementById('captchaImage');
+                if (captchaImage && !captchaImage.src.includes('data:image')) {
+                    // 如果初始没有加载成功，再次请求
+                    fetch('/scoreQuery/captcha')
+                        .then(response => response.text())
+                        .then(data => {
+                            captchaImage.src = data;
+                        });
+                }
+            });
         </script>
     </body>
 </html>

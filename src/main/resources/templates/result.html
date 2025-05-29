@@ -5,179 +5,503 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>成绩查询结果</title>
         <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <!-- 引入Font Awesome图标库，用于更多可爱图标 -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
         <style>
             body {
                 padding-top: 20px;
                 padding-bottom: 20px;
-                background-color: #f8f9fa; /* 浅灰色背景 */
+                background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%); /* 渐变背景与index.html一致 */
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start; /* 内容从顶部开始 */
+                align-items: center;
+                font-family: 'Noto Sans SC', sans-serif;
+                color: #333;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 600px; /* 控制结果页面的最大宽度，适应桌面和平板 */
+                padding: 15px;
+            }
+
+            h2 {
+                color: #007bff;
+                font-weight: 700;
+                margin-bottom: 30px;
+                letter-spacing: 1px;
             }
 
             .card {
                 margin-bottom: 20px;
-                border-radius: 10px; /* 圆角 */
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影 */
+                border-radius: 15px; /* 圆角 */
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 柔和阴影 */
+                background-color: #ffffff; /* 白色背景 */
+                border: none; /* 移除默认边框 */
             }
 
+            /* 统一卡片头部样式 - 方案二：无独立背景 */
             .card-header {
-                background-color: #007bff; /* 蓝色卡片头 */
-                color: white;
-                border-radius: 10px 10px 0 0;
-                font-weight: bold;
+                background: none; /* 移除背景色 */
+                color: #007bff; /* 文字颜色改为主题蓝 */
+                border-radius: 15px 15px 0 0; /* 保持顶部圆角，但无背景下实际效果不明显 */
+                font-weight: 700; /* 加粗 */
+                padding: 1rem 1.5rem 0.5rem; /* 调整内边距，底部留少点空间 */
+                font-size: 1.15rem;
+                display: flex;
+                align-items: center;
+                /* 移除底部边框，与 body 融合 */
+                border-bottom: none;
             }
-
+            .card-header i { /* 卡片头部图标样式统一放左边 */
+                margin-right: 10px;
+                font-size: 1.2em;
+                color: #007bff; /* 图标颜色也改为主题蓝 */
+            }
+            /* 调整 card-body 的顶部内边距，与 header 更好的衔接 */
             .card-body {
-                padding: 20px;
+                padding: 1rem 1.5rem 1.5rem; /* 上下内边距，确保内容不顶着Header */
             }
 
-            .score-display {
+
+            /* 成绩小奖状专属样式 */
+            .award-card {
+                background: #fff;
+                padding: 25px 30px;
+                border-radius: 15px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
                 text-align: center;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 25px; /* 增加与下方卡片间距 */
             }
-
-            .score-display h1 {
-                font-size: 3rem;
-                margin-bottom: 0.5rem;
+            .award-card h3 {
+                color: #e6b800; /* 金色系 */
+                font-size: 1.8rem;
+                font-weight: 700;
+                margin-bottom: 15px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             }
-
-            .score-display h4 {
-                margin-bottom: 0.5rem;
-                color: #007bff;
-            }
-
-            .comment-section p {
-                white-space: pre-line;
-            }
-
-            .download-section {
-                text-align: center;
-            }
-
-            .download-section a {
+            .award-content {
+                border: 2px dashed #ffd700; /* 虚线金边 */
+                padding: 20px 15px;
+                border-radius: 10px;
                 margin-top: 10px;
+                background-color: #fffaf0; /* 淡米色背景 */
+                position: relative; /* 为内部星星定位 */
+            }
+            .award-content .star-icon { /* 内部小星星 */
+                font-size: 2rem;
+                position: absolute;
+                top: 5px; /* 调整位置 */
+                right: 15px; /* 调整位置 */
+                opacity: 0.8;
+                transform: rotate(-15deg); /* 保持倾斜 */
+                color: #ffeb3b; /* 黄色星星 */
+            }
+            .award-content h1 {
+                font-size: 4.5rem; /* 放大总评字体 */
+                margin-bottom: 1rem;
+                font-weight: 700;
+                line-height: 1;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* 阴影增强立体感 */
+            }
+            /* 成绩详情排版 */
+            .score-details {
+                display: flex; /* 使用 Flexbox 布局 */
+                justify-content: center; /* 水平居中 */
+                align-items: flex-start; /* 顶部对齐，如果元素高度不同 */
+                gap: 15px; /* 两个成绩之间的间距 */
+                margin-top: 15px; /* 与总评的间距 */
+                flex-wrap: nowrap; /* 强制不换行 */
+            }
+            .score-item {
+                display: flex;
+                flex-direction: column; /* 文字垂直排列 */
+                align-items: center; /* 居中 */
+                padding: 8px 10px; /* 左右内边距稍微缩小 */
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background-color: #f7f7f7; /* 浅灰色背景 */
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                flex-shrink: 0; /* 防止项目缩小 */
+                flex-grow: 1; /* 允许项目增长以填充空间 */
+                flex-basis: 0; /* 允许项目基于内容收缩 */
+                min-width: 0; /* 允许内容在必要时溢出或缩小字体 */
+            }
+            .score-item .label {
+                font-size: 0.85rem;
+                color: #777;
+                margin-bottom: 5px;
+            }
+            .score-item .value {
+                font-size: 1.2rem;
+                font-weight: 600;
+                white-space: nowrap; /* 分数不换行 */
             }
 
-            .feedback-section textarea {
-                height: 150px;
+            .award-info {
+                font-size: 0.95rem;
+                color: #777;
+                margin-top: 15px;
             }
 
-            .class-section {
+            /* 评语卡片样式 */
+            .comment-normal-card {
+                background-color: #e3f2fd; /* 浅蓝色背景 */
+                border-radius: 15px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                /* 移除 padding，由 card-body 统一控制 */
+                margin-bottom: 20px;
+                text-align: left;
+                position: relative;
+                overflow: hidden;
+            }
+            .comment-normal-card .card-body p { /* 针对评语内容再调整 */
+                white-space: pre-line;
+                line-height: 1.7;
+                color: #4a4a4a;
+                font-size: 1.05rem;
+            }
+
+            /* 下载作品样式 */
+            .download-fancy-card {
+                background: linear-gradient(90deg, #d4edda, #c3e6cb); /* 浅绿色渐变背景 */
+                /* 移除 padding，由 card-body 统一控制 */
+                border-radius: 15px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
                 text-align: center;
                 margin-bottom: 20px;
+            }
+            .download-fancy-card .btn-download {
+                background-color: #28a745; /* 绿色按钮 */
+                border-color: #28a745;
+                color: white;
+                border-radius: 50px; /* 超圆角胶囊按钮 */
+                padding: 12px 30px;
+                font-size: 1.15rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+            }
+            .download-fancy-card .btn-download:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+            }
+            .download-fancy-card .card-body p { /* 针对下载提示文字再调整 */
+                color: #444;
+                font-size: 0.95rem;
+                margin-top: 15px;
+            }
+
+            /* 留言板样式 */
+            .feedback-board-card {
+                background: #fdf6e3; /* 浅黄色背景，像便签纸 */
+                /* 移除 padding，由 card-body 统一控制 */
+                border-radius: 15px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .feedback-board-card label {
+                font-weight: 500;
+                color: #666;
+            }
+            .feedback-board-card textarea {
+                border-radius: 10px;
+                border: 1px solid #ffca28; /* 黄色边框 */
+                background-color: #fffef7;
+                padding: 12px 15px;
+                font-size: 1.05rem;
+                box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            }
+            .feedback-board-card textarea:focus {
+                border-color: #ffc107;
+                box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+            }
+            .feedback-board-card .btn-submit {
+                background-color: #ffc107; /* 黄色按钮 */
+                border-color: #ffc107;
+                color: white;
+                border-radius: 8px;
+                height: 50px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+            }
+            .feedback-board-card .btn-submit:hover {
+                background-color: #e0a800;
+                border-color: #d39e00;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(255, 193, 7, 0.4);
+            }
+
+
+            /* 班级信息新排版 */
+            .class-section {
+                margin-bottom: 25px;
+                background-color: #ffffff;
+                padding: 15px 20px;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+                display: grid; /* 使用 Grid 布局 */
+                grid-template-columns: 1fr 1fr; /* 两列布局 */
+                gap: 10px 20px; /* 行和列的间距 */
+                align-items: center;
+            }
+            .class-item {
+                display: flex;
+                flex-direction: column; /* 文本垂直排列 */
+                text-align: center;
+                color: #444;
+                font-size: 0.95rem;
+            }
+            .class-item .label {
+                font-weight: 400;
+                color: #666;
+            }
+            .class-item .value {
+                font-weight: 600;
+                color: #007bff;
                 font-size: 1.1rem;
             }
-
-            .grade-a {
-                color: #1fd526; /* 绿色 */
+            /* 姓名单独一行 */
+            .class-item.name-item {
+                grid-column: span 2; /* 姓名占据两列 */
+                text-align: center;
+                margin-top: 5px; /* 与上面两行间距 */
             }
 
-            .grade-b {
-                color: #b48909; /* 黄色 */
+
+            /* 成绩等级颜色 */
+            .grade-a { color: #28a745; } /* 绿色 */
+            .grade-b { color: #ffc107; } /* 黄色 */
+            .grade-c { color: #fd7e14; } /* 橙色 */
+            .grade-other { color: #6c757d; } /* 灰色 */
+
+            /* 页脚 */
+            footer {
+                margin-top: 30px;
+                color: #6c757d;
+                font-size: 0.9rem;
             }
 
-            .grade-c {
-                color: #c96909; /* 橙色 */
-            }
-
-            .grade-other {
-                color: #757575; /* 灰色 */
+            /* 手机适配 */
+            @media (max-width: 576px) {
+                body {
+                    padding: 10px;
+                }
+                .container {
+                    padding: 0;
+                }
+                h2 {
+                    font-size: 1.8rem;
+                    margin-bottom: 20px;
+                }
+                .card {
+                    margin-bottom: 15px;
+                    border-radius: 10px;
+                }
+                .card-header {
+                    padding: 0.8rem 1.2rem 0.4rem; /* 调整手机端 header padding */
+                    font-size: 1.05rem;
+                    border-radius: 10px 10px 0 0; /* 保持顶部圆角 */
+                }
+                .card-body {
+                    padding: 0.8rem 1.2rem 1.2rem; /* 调整手机端 body padding */
+                }
+                /* 奖状卡片 */
+                .award-card {
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border-radius: 10px;
+                }
+                .award-card h3 {
+                    font-size: 1.5rem;
+                    margin-bottom: 10px;
+                }
+                .award-content {
+                    padding: 15px 10px;
+                }
+                .award-content h1 {
+                    font-size: 3.5rem;
+                    margin-bottom: 0.8rem;
+                }
+                .score-details {
+                    flex-direction: row; /* 手机上强制水平排列 */
+                    gap: 10px; /* 间距再缩小 */
+                }
+                .score-item {
+                    min-width: unset;
+                    flex-basis: 0;
+                    flex-grow: 1;
+                    padding: 6px 8px; /* 手机上内边距再缩小 */
+                }
+                .score-item .label {
+                    font-size: 0.8rem;
+                }
+                .score-item .value {
+                    font-size: 1.1rem;
+                }
+                /* 班级信息在手机上保持两列，姓名独占一行 */
+                .class-section {
+                    gap: 8px 15px;
+                    padding: 10px 15px;
+                    margin-bottom: 15px;
+                    font-size: 0.9rem;
+                    border-radius: 10px;
+                }
+                .class-item .value {
+                    font-size: 1rem;
+                }
+                /* 评语卡片 */
+                .comment-normal-card { /* 变为普通卡片 */
+                    padding: 0; /* 移除卡片自身padding，由body控制 */
+                    border-radius: 10px;
+                    margin-bottom: 15px;
+                }
+                .comment-normal-card .card-body p {
+                    font-size: 0.95rem;
+                }
+                /* 下载作品 */
+                .download-fancy-card {
+                    padding: 0; /* 移除卡片自身padding，由body控制 */
+                    border-radius: 10px;
+                    margin-bottom: 15px;
+                }
+                .download-fancy-card .btn-download {
+                    padding: 10px 20px;
+                    font-size: 1.05rem;
+                }
+                /* 留言板 */
+                .feedback-board-card {
+                    padding: 0; /* 移除卡片自身padding，由body控制 */
+                    border-radius: 10px;
+                    margin-bottom: 15px;
+                }
+                .feedback-board-card textarea {
+                    height: 100px;
+                    font-size: 0.95rem;
+                }
+                .feedback-board-card .btn-submit {
+                    height: 45px;
+                    font-size: 1rem;
+                }
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center mb-4">成绩</h2>
+            <h2 class="text-center">成绩</h2>
+
+            <!-- 学生信息部分 -->
             <div class="class-section">
-                <p >
-                    班级：<span th:text="${student.className}"></span>
-                        教学班级：<span th:text="${student.teachingClassName}"></span> <!-- 新增教学班级显示 -->
-                        姓名：<span th:text="${student.name}"></span>
-                </p>
-
-            </div>
-            <div th:if="${suc}" class="alert alert-success" role="alert">
-                <span>留言提交成功！</span>
-            </div>
-            <div class="card" th:if="${student.getTotalScore()}">
-                <div class="card-header">
-                    成绩
-
+                <div class="class-item">
+                    <span class="label">班级：</span>
+                    <span class="value" th:text="${student.className}">一年级一班</span>
                 </div>
-                <div class="card-body score-display">
-                    <h4>总评</h4>
+                <div class="class-item">
+                    <span class="label">教学班级：</span>
+                    <span class="value" th:text="${student.teachingClassName}">编程提高班A</span>
+                </div>
+                <div class="class-item name-item">
+                    <span class="label">姓名：</span>
+                    <span class="value" th:text="${student.name}">小明</span>
+                </div>
+            </div>
+
+            <!-- 成绩小奖状卡片 -->
+            <div class="award-card" th:if="${student.getTotalScore()}">
+                <h3>恭喜你获得以下成绩！</h3>
+                <div class="award-content">
+                    <span class="star-icon">✨</span> <!-- 小星星图标 -->
                     <h1 th:class="${'grade-' + student.totalScore.trim().substring(0,1).toLowerCase()}"
                         th:text="${student.totalScore}"></h1>
-                    <p style="margin-bottom: 0" >
-                        期末作品成绩: <span th:if="${student.getFinalScore()}"
-                                            th:class="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
-                                            th:text="${student.finalScore}"></span>
-                            
-                        平时表现成绩: <span th:if="${student.getUsualScore()}"
-                                            th:class="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
-                                            th:text="${student.usualScore}"></span>
-                    </p>
-                    <span style="text-align: right;margin: 0 auto;font-size: small" >2025年春季</span>
 
+                    <!-- 期末作品成绩和平时表现成绩的新排版 -->
+                    <div class="score-details">
+                        <div class="score-item">
+                            <span class="label">期末作品成绩</span>
+                            <span class="value" th:if="${student.getFinalScore()}"
+                                  th:classappend="${'grade-' + student.finalScore.trim().substring(0,1).toLowerCase()}"
+                                  th:text="${student.finalScore}"></span>
+                            <span class="value" th:unless="${student.getFinalScore()}">暂无</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="label">平时表现成绩</span>
+                            <span class="value" th:if="${student.getUsualScore()}"
+                                  th:classappend="${'grade-' + student.usualScore.trim().substring(0,1).toLowerCase()}"
+                                  th:text="${student.usualScore}"></span>
+                            <span class="value" th:unless="${student.getUsualScore()}">暂无</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="award-info">
+                    <p>学期：2025年春季学期</p>
                 </div>
             </div>
-            <div class="card">
+
+            <!-- 留言提交成功提示 -->
+            <div th:if="${suc}" class="alert alert-success text-center" role="alert">
+                <span>留言提交成功！</span>
+            </div>
+
+            <!-- 评语卡片 (改为普通卡片样式，无箭头，图标统一在header) -->
+            <div class="card comment-normal-card">
                 <div class="card-header">
-                    评语
+                    <i class="fas fa-comment-dots"></i> 老师评语 <!-- 统一图标位置在header -->
                 </div>
-                <div class="card-body comment-section">
-                    <p style="white-space: pre-line;" th:text="${student.comment}"></p>
+                <div class="card-body">
+                    <p th:text="${student.comment}"></p>
                 </div>
             </div>
 
-            <div class="card" th:if="${downloadable}">
+            <!-- 下载作品花式卡片 (图标统一在header) -->
+            <div class="card download-fancy-card" th:if="${downloadable}">
                 <div class="card-header">
-                    下载作品
+                    <i class="fas fa-cloud-arrow-down"></i> 下载作品 <!-- 统一图标位置在header -->
                 </div>
-                <div class="card-body download-section">
+                <div class="card-body">
                     <div th:if="${isDesktop}">
-                        <a class="btn btn-primary"
-                           th:href="@{/download(name=${student.name})}">下载作品</a>
-                        <p th:unless="${downloadable}">没有找到您的作品</p>
+                        <a class="btn btn-download"
+                           th:href="@{/download(name=${student.name})}">下载你的 Scratch 作品</a>
                     </div>
                     <div th:unless="${isDesktop}">
                         <p>请在电脑端打开网页下载学生作品</p>
                     </div>
                 </div>
             </div>
-            <div class="card">
+
+            <!-- 想对老师说留言板卡片 (图标统一在header) -->
+            <div class="card feedback-board-card">
                 <div class="card-header">
-                    想对老师说
+                    <i class="fas fa-paper-plane"></i> 想对老师说 <!-- 统一图标位置在header -->
                 </div>
                 <div class="card-body">
                     <form th:action="@{/score/feedback}" method="post">
                         <input type="hidden" name="id" th:value="${student.id}">
-                        <div class="feedback-section">
-                            <div class="form-group">
-                                <label for="feedback">建议/想法（选填）：</label>
-                                <textarea class="form-control" id="feedback" name="feedback" rows="5"
-                                          maxlength="500"></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">提交</button>
+                        <div class="form-group">
+                            <textarea class="form-control" id="feedback" name="feedback" rows="5"
+                                      maxlength="500" placeholder="有什么建议或想法想告诉老师吗？"></textarea>
                         </div>
+                        <button type="submit" class="btn btn-submit btn-block">提交留言</button>
                     </form>
                 </div>
             </div>
         </div>
-        <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
-        <script>
-            // 检查是否是移动设备
-            function isMobileDevice() {
-                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
 
-            // 如果是移动设备，则隐藏下载链接
-            document.addEventListener('DOMContentLoaded', function () {
-                if (isMobileDevice()) {
+        <footer style="text-align: center">
+            <p>© Namelessman 林煜耿 2024</p>
+        </footer>
 
-                }
-            });
-
-        </script>
         <script src="/scoreQuery/jquery.js"></script>
         <script src="/scoreQuery/popper.js"></script>
         <script src="/scoreQuery/bootstrap.js"></script>

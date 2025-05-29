@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>后台管理</title>
+    <link rel="stylesheet" href="/scoreQuery/bootstrap.css">
+    <style>
+      body {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background-color: #f8f9fa;
+      }
+      .container-fluid { /* 使用 container-fluid 让内容更宽 */
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+      .card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .card-header {
+        background-color: #007bff;
+        color: white;
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+        padding: 1rem 1.25rem;
+      }
+      .filter-section {
+        padding: 20px;
+      }
+      .table-responsive { /* 包裹表格，使其在小屏幕上可滚动，但我们希望它不滚动 */
+        overflow-x: hidden; /* 隐藏横向滚动条 */
+      }
+      .table-sm th, .table-sm td {
+        padding: 0.3rem; /* 减小单元格内边距 */
+        vertical-align: middle; /* 垂直居中 */
+      }
+      .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05); /* 条纹表格 */
+      }
+      .table th, .table td {
+        white-space: normal; /* 强制文本换行 */
+        word-wrap: break-word; /* 单词内部换行 */
+        min-width: 50px; /* 设置最小宽度，避免过窄 */
+      }
+      /* 针对特定列的宽度优化 */
+      .table th:nth-child(1), .table td:nth-child(1) { width: 5%; } /* ID */
+      .table th:nth-child(2), .table td:nth-child(2) { width: 10%; } /* 班级 */
+      .table th:nth-child(3), .table td:nth-child(3) { width: 8%; }  /* 姓名 */
+      .table th:nth-child(4), .table td:nth-child(4) { width: 8%; }  /* 期末 */
+      .table th:nth-child(5), .table td:nth-child(5) { width: 8%; }  /* 平时 */
+      .table th:nth-child(6), .table td:nth-child(6) { width: 8%; }  /* 总评 */
+      .table th:nth-child(7), .table td:nth-child(7) { width: 25%; } /* 评语 */
+      .table th:nth-child(8), .table td:nth-child(8) { width: 8%; }  /* 是否查询 */
+      .table th:nth-child(9), .table td:nth-child(9) { width: 10%; } /* 预留手机号 */
+      .table th:nth-child(10), .table td:nth-child(10) { width: 10%; } /* 留言 */
+
+      /* 确保表格总宽度不超过父容器 */
+      .table {
+        width: 100%;
+        table-layout: fixed; /* 固定表格布局，确保列宽按百分比分配 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h2 class="text-center mb-4">后台管理</h2>
+
+      <div class="card">
+        <div class="card-header">
+          筛选条件
+        </div>
+        <div class="card-body filter-section">
+          <form th:action="@{/admin}" method="get" class="form-inline">
+            <input type="hidden" name="password" th:value="${params.password}">
+
+            <div class="form-group mr-3 mb-2">
+              <label for="classNames" class="mr-2">班级：</label>
+              <select id="classNames" name="classNames" multiple class="form-control form-control-sm">
+                <option th:each="className : ${allClassNames}"
+                        th:value="${className}"
+                        th:text="${className}"
+                        th:selected="${params.classNames != null and params.classNames.contains(className)}">
+                  班级名称
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group mr-3 mb-2">
+              <label class="mr-2">是否查询：</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isChecked" id="checkedTrue" value="true"
+                       th:checked="${params.isChecked != null and params.isChecked == true}">
+                <label class="form-check-label" for="checkedTrue">是</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isChecked" id="checkedFalse" value="false"
+                       th:checked="${params.isChecked != null and params.isChecked == false}">
+                <label class="form-check-label" for="checkedFalse">否</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="isChecked" id="checkedAll" value=""
+                       th:checked="${params.isChecked == null}">
+                <label class="form-check-label" for="checkedAll">全部</label>
+              </div>
+            </div>
+
+            <div class="form-group mr-3 mb-2">
+              <label class="mr-2">是否有留言：</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackTrue" value="true"
+                       th:checked="${params.hasFeedback != null and params.hasFeedback == true}">
+                <label class="form-check-label" for="feedbackTrue">是</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackFalse" value="false"
+                       th:checked="${params.hasFeedback != null and params.hasFeedback == false}">
+                <label class="form-check-label" for="feedbackFalse">否</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hasFeedback" id="feedbackAll" value=""
+                       th:checked="${params.hasFeedback == null}">
+                <label class="form-check-label" for="feedbackAll">全部</label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm mb-2">筛选</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          统计信息
+        </div>
+        <div class="card-body">
+          <p>查询率：<strong th:text="${queryRate}">0.00%</strong></p>
+          <p>留言率：<strong th:text="${feedbackRate}">0.00%</strong></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          学生列表
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>班级</th>
+                  <th>姓名</th>
+                  <th>期末成绩</th>
+                  <th>平时成绩</th>
+                  <th>总评</th>
+                  <th>评语</th>
+                  <th>是否查询</th>
+                  <th>预留手机号</th>
+                  <th>留言</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="student : ${students}">
+                  <td th:text="${student.id}">1</td>
+                  <td th:text="${student.className}">一年级一班</td>
+                  <td th:text="${student.name}">小明</td>
+                  <td th:text="${student.finalScore}">A</td>
+                  <td th:text="${student.usualScore}">B</td>
+                  <td th:text="${student.totalScore}">A</td>
+                  <td th:text="${student.comment}">好好表现</td>
+                  <td th:text="${student.checked ? '是' : '否'}">是</td>
+                  <td th:text="${student.phone}">13888888888</td>
+                  <td th:text="${student.feedback}">老师很棒！</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(students)}">
+                  <td colspan="10" class="text-center">没有找到符合条件的学生数据。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size: 20px;text-align: center">© Namelessman 林煜耿 2024</p>
+
+    <script src="/scoreQuery/jquery.js"></script>
+    <script src="/scoreQuery/popper.js"></script>
+    <script src="/scoreQuery/bootstrap.js"></script> <!-- 注意这里是bootstrap.js -->
+    <script>
+      // 在页面加载完成后执行
+      $(document).ready(function() {
+        // 让多选框支持 Ctrl/Cmd + 点击取消选中
+        $('#classNames').on('mousedown', 'option', function(e) {
+          e.preventDefault();
+          $(this).prop('selected', !$(this).prop('selected'));
+          // 触发change事件，确保表单提交时选中状态正确
+          $(this).parent().trigger('change');
+        });
+      });
+    </script>
+  </body>
+</html>

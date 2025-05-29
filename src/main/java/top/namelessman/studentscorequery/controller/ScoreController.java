@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import top.namelessman.studentscorequery.dto.AdminQueryParam;
 import top.namelessman.studentscorequery.entity.Student;
 import top.namelessman.studentscorequery.mapper.StudentMapper;
 import top.namelessman.studentscorequery.service.StudentService;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Controller
 public class ScoreController {
@@ -153,6 +155,65 @@ public class ScoreController {
         session.setAttribute("captcha", captcha.getCode());
 
         return ResponseEntity.ok("data:image/png;base64," + captcha.getBase64Image());
+    }
+
+
+
+
+    @GetMapping("/admin")
+    public String admin(AdminQueryParam params, Model model) {
+        // 1. 密码验证
+        if (!"Fucku_bug".equals(params.getPassword())) {
+            // 密码不正确，重定向到首页
+            return "redirect:/";
+        }
+        // 2. 准备所有班级列表，用于前端筛选下拉框或复选框
+        // 这一步需要 StudentMapper 或 Service 提供方法来获取所有不重复的班级名称
+        // 我先假设有一个方法叫 studentMapper.findAllClassNames()
+        List<String> allClassNames = studentMapper.findAllClassNames(); // 待实现
+        model.addAttribute("allClassNames", allClassNames);
+        // 3. 构建查询条件
+        QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+        // 班级筛选 (多选)
+        if (params.getClassNames() != null && !params.getClassNames().isEmpty()) {
+            queryWrapper.in("class_name", params.getClassNames());
+        }
+        // 是否查询筛选
+        if (params.getIsChecked() != null) {
+            queryWrapper.eq("is_checked", params.getIsChecked());
+        }
+        // 是否有留言筛选
+        if (params.getHasFeedback() != null) {
+            if (params.getHasFeedback()) { // 有留言 (feedback IS NOT NULL AND feedback != '')
+                queryWrapper.isNotNull("feedback").ne("feedback", "");
+            } else { // 无留言 (feedback IS NULL OR feedback = '')
+                queryWrapper.and(wrapper -> wrapper.isNull("feedback").or().eq("feedback", ""));
+            }
+        }
+        // 4. 查询学生数据
+        List<Student> students = studentMapper.selectList(queryWrapper); // 使用 Mapper 直接查询
+        // 5. 计算统计数据 (查询率和留言率)
+        long totalStudentsInSelectedClasses = 0;
+        if (params.getClassNames() != null && !params.getClassNames().isEmpty()) {
+            // 如果指定了班级，就统计这些班级的总人数
+            totalStudentsInSelectedClasses = studentMapper.selectCount(
+                    new QueryWrapper<Student>().in("class_name", params.getClassNames())
+            ); // 待实现 count 方法
+        } else {
+            // 否则统计所有学生总人数
+            totalStudentsInSelectedClasses = studentMapper.selectCount(null);
+        }
+        long checkedStudents = students.stream().filter(s -> s.getChecked() != null && s.getChecked()).count();
+        long feedbackStudents = students.stream().filter(s -> s.getFeedback() != null && !s.getFeedback().trim().isEmpty()).count();
+        double queryRate = (totalStudentsInSelectedClasses == 0) ? 0 : (double) checkedStudents / totalStudentsInSelectedClasses;
+        double feedbackRate = (totalStudentsInSelectedClasses == 0) ? 0 : (double) feedbackStudents / totalStudentsInSelectedClasses;
+        // 格式化百分比
+        model.addAttribute("queryRate", String.format("%.2f%%", queryRate * 100));
+        model.addAttribute("feedbackRate", String.format("%.2f%%", feedbackRate * 100));
+        // 6. 将数据添加到 model
+        model.addAttribute("students", students);
+        model.addAttribute("params", params); // 将当前筛选参数传回页面，用于回显
+        return "admin"; // 返回 admin.html 页面
     }
 
 

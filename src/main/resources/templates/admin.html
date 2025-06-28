@@ -242,42 +242,42 @@
       .student-card-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start; /* 调整对齐方式，防止长文本被挤 */
+        align-items: flex-start;
         margin-bottom: 10px;
-        padding-right: 30px; /* 增加右边距，为箭头留出空间 */
+        padding-right: 30px;
       }
       .student-card-header .name-class {
         font-size: 1.15rem;
         font-weight: 700;
         color: #007bff;
-        flex-grow: 1; /* 允许姓名和班级占据更多空间 */
-        min-width: 0; /* 允许内容在必要时换行 */
-        white-space: normal; /* 允许换行 */
+        flex-grow: 1;
+        min-width: 0;
+        white-space: normal;
       }
-      .student-card-header .name-class small { /* 班级字体可以再小一点点 */
+      .student-card-header .name-class small {
         font-size: 0.9em;
-        display: block; /* 强制班级换行显示在姓名下方 */
+        display: block;
         margin-top: 2px;
       }
       .student-card-header .score-status {
         display: flex;
-        flex-shrink: 0; /* 防止该部分收缩 */
+        flex-shrink: 0;
         align-items: center;
-        gap: 8px; /* 间距稍微缩小 */
-        padding-left: 10px; /* 与左侧文字间距 */
-        margin-left: auto; /* 推到最右边 */
+        gap: 8px;
+        padding-left: 10px;
+        margin-left: auto;
       }
       .student-card-header .total-score {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #28a745; /* 绿色 */
+        color: #28a745;
         min-width: 40px;
         text-align: right;
-        white-space: nowrap; /* 总评不换行 */
+        white-space: nowrap;
       }
       .student-card-header .checked-status {
-        font-size: 0.85em; /* 字体小一点 */
-        padding: 3px 6px; /* 缩小内边距 */
+        font-size: 0.85em;
+        padding: 3px 6px;
         border-radius: 5px;
         font-weight: 600;
         white-space: nowrap;
@@ -311,7 +311,7 @@
       .detail-label {
         font-weight: 500;
         color: #444;
-        flex-shrink: 0; /* 标签不收缩 */
+        flex-shrink: 0;
         margin-right: 10px;
       }
       .detail-value {
@@ -334,9 +334,9 @@
 
       .expand-arrow {
         position: absolute;
-        top: 18px; /* 调整箭头位置 */
-        right: 15px; /* 调整箭头位置 */
-        font-size: 1.1em; /* 箭头小一点点 */
+        top: 18px;
+        right: 15px;
+        font-size: 1.1em;
         color: #007bff;
         transition: transform 0.3s ease;
       }
@@ -377,24 +377,31 @@
           padding: 10px;
         }
         .table-desktop {
-          display: none; /* 在手机端隐藏表格 */
+          display: none;
         }
         .card-list-mobile {
-          display: block; /* 在手机端显示卡片列表 */
+          display: block;
         }
-        .filter-row {
+        .filter-row { /* 针对每个filter-row本身进行flex-direction调整 */
           flex-direction: column;
           align-items: flex-start;
           margin-bottom: 15px;
         }
-        .filter-item {
+        .filter-item { /* 调整filter-item以适应单行显示标签+换行显示内容 */
           margin-right: 0;
-          margin-bottom: 10px;
-          width: 100%;
+          margin-bottom: 5px; /* 标签和其内容之间的小间距 */
+          width: 100%; /* 占据整行 */
+          flex-direction: column; /* 让 label 和 class-card-container/radio-group 垂直排列 */
+          align-items: flex-start; /* 左对齐 */
         }
-        .class-card-container {
+        .filter-item label { /* 标签下方有间距 */
+          margin-bottom: 8px;
+          margin-right: 0; /* 移除右侧间距 */
+        }
+        .class-card-container, .radio-button-group { /* 确保列表/按钮组占据整行 */
           width: 100%;
           justify-content: flex-start;
+          margin-bottom: 5px; /* 确保自身内容和下一个筛选项有间距 */
         }
         .class-card {
           padding: 6px 12px;
@@ -436,7 +443,7 @@
 
 
             <div class="filter-row">
-              <div class="filter-item">
+              <div class="filter-item"> <!-- 注意这里的 flex-direction 和 align-items 会被媒体查询覆盖 -->
                 <label><i class="fas fa-chalkboard-teacher"></i> 教学班级：</label>
                 <div class="class-card-container">
                             <span th:each="tcName : ${allTeachingClassNames}"
@@ -581,7 +588,7 @@
             <div class="student-card-header">
               <div class="name-class">
                 <span th:text="${student.name}">小明</span>
-                <!-- 班级显示为 className，并强制换行 -->
+                <!-- 强制班级换行显示在姓名下方，并显示班级而不是教学班级 -->
                 <small class="text-muted" th:if="${student.className}" th:text="${'(' + student.className + ')'}"></small>
               </div>
               <div class="score-status">

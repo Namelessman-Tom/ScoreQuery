@@ -403,15 +403,15 @@
             <!-- 学生信息部分 -->
             <div class="class-section">
                 <div class="class-item">
-                    <span class="label">班级：</span>
+                    <span class="label">班级</span>
                     <span class="value" th:text="${student.className}">一年级一班</span>
                 </div>
                 <div class="class-item">
-                    <span class="label">教学班级：</span>
+                    <span class="label">教学班级</span>
                     <span class="value" th:text="${student.teachingClassName}">编程提高班A</span>
                 </div>
                 <div class="class-item name-item">
-                    <span class="label">姓名：</span>
+                    <span class="label">姓名</span>
                     <span class="value" th:text="${student.name}">小明</span>
                 </div>
             </div>
@@ -458,7 +458,8 @@
                     <i class="fas fa-comment-dots"></i> 老师评语 <!-- 统一图标位置在header -->
                 </div>
                 <div class="card-body">
-                    <p th:text="${student.comment}"></p>
+                    <p><span th:text="${student.name}"></span>同学：</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${student.comment}"></span></p>
                 </div>
             </div>
 

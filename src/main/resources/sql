@@ -1,0 +1,18 @@
+create database cjcx
+
+create table cjcx.student
+(
+    id                  int auto_increment
+        primary key,
+    class_name          varchar(30)          null,
+    name                varchar(10)          null,
+    phone               varchar(11)          null,
+    final_score         varchar(10)          null,
+    usual_score         varchar(10)          null,
+    total_score         varchar(10)          null,
+    comment             varchar(500)         null,
+    is_checked          tinyint(1) default 0 null,
+    feedback            varchar(500)         null,
+    teaching_class_name varchar(20)          null comment '教学班级名'
+);
+

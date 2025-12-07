@@ -1,0 +1,22 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://www.namelessman.top:3306/cjcx?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+file:
+  download:
+    path: /root/xszp2 # 学生作品保存目录
+
+server:
+  port: 8080
+  servlet:
+    context-path: /scoreQuery
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true

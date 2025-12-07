@@ -45,7 +45,7 @@ public class AdminQueryParam {
     public String toString() {
         return "AdminQueryParam{" +
                 "password='" + password + '\'' +
-                ", teachingClassNames=" + teachingClassNames + // <-- toString() 也改了
+                ", teachingClassNames=" + teachingClassNames +
                 ", isChecked=" + isChecked +
                 ", hasFeedback=" + hasFeedback +
                 '}';

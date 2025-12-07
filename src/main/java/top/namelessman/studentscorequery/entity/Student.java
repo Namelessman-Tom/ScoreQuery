@@ -4,7 +4,6 @@ package top.namelessman.studentscorequery.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField; // 导入 TableField 注解
 
 @TableName("student")
 public class Student {

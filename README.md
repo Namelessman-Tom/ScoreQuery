@@ -119,9 +119,9 @@ Tomcat started on port(s): 8080 (http) with context path '/scoreQuery'
 
 打包完毕后，项目文件夹下会出现`target/StudentScoreQuery-0.0.1-SNAPSHOT.jar`文件
 
-服务器操作中建议用root用户，否则对于新生容易出现权限问题
-
 ![img_4.png](img_4.png)
+
+**ps: 服务器操作中建议用root用户，否则对于新手容易出现权限问题**
 
 #### 3. 上传服务器
 将`target/StudentScoreQuery-0.0.1-SNAPSHOT.jar`文件上传到服务器
